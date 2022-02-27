@@ -1,0 +1,14 @@
+IRMS.py contains a definition for an object that stores IRMS data and is able to return ratios based on the reference gas.
+
+Main.py is a script used to sort through the spreadsheet data and compile every dataset into a single variable, which is converted to a panda dataframe.
+This is done by using a dictionary with the following hierarchy
+Molecule (NO or N2O)
+→Sample Canister
+→→Individual Run
+
+For the varying energy experiment they are sorted as follows
+Sample Canister
+→Ionization Energy
+→→Individual Run
+
+Dataframe are simply exported to a Matlab file. (Give me a break, I wasn't very proficient with Python when working on this project.)

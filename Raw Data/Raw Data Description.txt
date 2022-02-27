@@ -1,0 +1,19 @@
+Samples,Enrichment (permil)
+A0,1000
+A1,875
+A2,200
+B0,750
+B1,625
+B2,150
+C0,500
+C1,375
+C2,100
+D0,250
+D2,50
+
+Sample names are given by a letter and number. The letter (A,B,C,D) are the four canisters used.
+Numbers correspond to the re-use of the canister by diluting the spiked sample. D0 and D2 skip one
+as the canister was refitted.
+
+Spreadsheet files contain a copy + paste from the original .did file from ISODAT.
+These are the original ion intensity measurements (in mV) with some calculations done by ISODAT.
