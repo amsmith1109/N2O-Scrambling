@@ -62,6 +62,9 @@ classdef IsoData
             end
         end
         
+        % delta() returns the permil deviation of the sample relative to
+        % the accepted international standard. For N2O, this corresponds to
+        % stochastically made N2O from N2-air and VSMOW.
         function out = delta(obj, idx)
             ref = load(obj.refID);
             ref = ref.(obj.refID);
@@ -82,6 +85,13 @@ classdef IsoData
     end
 end
 
+% refR() returns an average r value for for the reference gas.
+% This is done because the reference is measured before and after
+% any sample gas is measured. The average is supposed to correct
+% for any detector drift that may occur in the short time between
+% measurements. Thus the average is an extrapolation that estimates
+% how the reference would've been measured at the time the sample
+% was measured.
 function out = refR(obj,idx)
     top = conv(obj.reference(:,idx+1),[.5 .5], 'valid');
     bottom = conv(obj.reference(:,1),[.5 .5], 'valid');
