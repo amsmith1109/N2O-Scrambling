@@ -1,4 +1,4 @@
-function out = measureScrambling(sa,ref,rr31,r31ref,sensitivity)
+function out = measureScrambling(sa,ref,rr31,r31ref,s)
     %% Input Definitions
     % sa & ref are the known ratios for the calibration run. These should
     % be a nx3 matrix, where n is the number of calibration runs.
@@ -17,11 +17,8 @@ function out = measureScrambling(sa,ref,rr31,r31ref,sensitivity)
     % r is the measured ratio of sample ratio to reference ratio
     % Sensitivity is added as a way to check variability of the scrambling
     % coefficient if it is different for 15Na and 15Nb.
-    if ~exist('sensitivity')
-        sensitivity = 1;
-    end
-    I30 = @(R, s) 1 + sensitivity*s*R(1) + (1-s*sensitivity)*R(2);
-    I31 = @(R, s) (1-sensitivity*s)*R(1) + s*R(2) + R(3);
+    I30 = @(R, s) 1 + s*R(1) + (1-s)*R(2);
+    I31 = @(R, s) (1-s)*R(1) + s*R(2) + R(3);
     % Below is a correction to I31 that includes double substituted
     % species. This is separated from the I31 signal since calibration gas
     % is spiked with single substituted 15Nb. Therefore the double
@@ -29,7 +26,7 @@ function out = measureScrambling(sa,ref,rr31,r31ref,sensitivity)
     % The commented out errorFunction is the calculation without the
     % double substitution correction.
     sad = ref;
-    sad(2) = sad(2) + ref(2)*.0173;
+    sad(2) = sad(2) + sa(2)*s;
     I31correction = @(R,s) (s*R(1)+(1-s)*R(2))*R(3) + R(1)*R(2);
 %     errorFunction = @(s) I31(sa, s)./I30(sa, s).*I30(ref, s)./I31(ref, s) - rr31;
     errorFunction = @(s) ...

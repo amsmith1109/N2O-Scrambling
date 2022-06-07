@@ -62,7 +62,8 @@ for i = 1:numel(names)
             sample.(names{i}).R_ind,...
             refR,...
             sample.(names{i}).r31(j),...
-            sample.(names{i}).r31ref(j));
+            sample.(names{i}).r31ref(j),...
+            0.0173);
         sample.(names{i}).s(j) = s;
     end
     color = [(i-1)/10,0,(11-i)/10];
@@ -73,6 +74,7 @@ for i = 1:numel(names)
     plot(x,y,'o','Color',color)
     hold on;
 end
+
 %% Perform logarithmic fit and plot the results
 [xData, yData] = prepareCurveData(xx, yy);
 ft = fittype( 'a*log(x)+b', 'independent', 'x', 'dependent', 'y' );
@@ -85,7 +87,6 @@ opts.StartPoint = [0.001, 0.1];
 
 conf = confint(fitresult);
 
-r2(i) = gof.rsquare;
 plot(fitresult)
 txt = ['s = ',num2str(fitresult.a),' \times Log(V) + ',num2str(fitresult.b),'\newliner^2 = ',num2str(gof.rsquare)];
 ylim([.99*min(yy),1.01*max(yy)])
@@ -95,7 +96,7 @@ ylabel('Scrambling Coefficient')
 print_settings
 ax = gca;
 ax.XTick = [250,2500,4500];
-ax.YTick = [.086, .093];
+ax.YTick = [.086, .092];
 ax.Children(1).LineWidth = 1.5;
 ax.Children(1).Color = [0, 0, 0];
 ax.Legend.Location = 'southeast';
