@@ -1,5 +1,6 @@
 % Set up workspace
 clear all; clc; close all;
+load REU
 load N2O
 load NO
 load praxair
@@ -7,22 +8,39 @@ load praxair
 %% Get the 45R for each calibration sample
 % refR picks out the praxair 15Ra, 15Rb and 17R for easy reference.
 refR = [praxair.R15a, praxair.R15b, praxair.R17];
+
+%% Get R45 and R31 for each REU measurement
+for i = 1:6
+    REU.R45(i) = REU.N2O{i}.rr(1) * praxair.R45;
+    REU.R_ind(i) = ...
+        [praxair.R15a, ...                              %15Ra
+        (REU.R45(i) - praxair.R45) + praxair.R15b, ...  %15Rb
+        praxair.R17];                                   %17R
+    REU.intensity(i) = mean(REU.NO{i}.sample(:,1));
+    
+end
+
 % names is calibration sample's names (e.g. A2, B1...)
 names = fields(N2O);
 for i = 1:numel(names)
+    % Variable {set} contains all calibration samples from one of the
+    % canisters. i.e. all 17 runs for A0, B0... ect
     set = N2O.(names{i});
     for j = 1:numel(set)
-        r = set{j}.r(1);
+        % Grab the 45R value for each run in the set and add it to the
+        % vector tempR45.
+        r = set{j}.r(1)
+        % {r} is the intensity ratio of ratios (45/44)_sa/(45/44)_ref. To
+        % get it to the actual ratio, it is multiplied by the known 45R of
+        % the reference gas.
         tempR45(j) = r(1)*praxair.R45;
     end
     tempR45(find(isnan(tempR45))) = [];
-    tempR45 = mean(tempR45);
-    Rvals(i) = tempR45;
+    Rvals(i) = mean(tempR45);
     % Sample variable contains all measurement results. Here it is having
     % the 45R information and the known 15Ra, 15Rb, 17R that results from
     % it. The next loop adds NO fragment results.
     sample.(names{i}).R45 = tempR45; 
-    %Consider modifying the added beta by raising the difference term to .994375
     sample.(names{i}).R_ind = ...
         [praxair.R15a, ...                          %15Ra
         (tempR45 - praxair.R45) + praxair.R15b, ... %15Rb
@@ -31,7 +49,7 @@ for i = 1:numel(names)
 end
 % Rearrange names to index calibration samples in increasing enrichment.
 % This later allows the plot to be color coded for enrichment.
-[~,idx] = sort(Rvals);
+[~, idx] = sort(Rvals);
 names = names(idx);
 %% Organize 31r data for determining scrambling coefficient
 for i = 1:numel(names)
@@ -45,7 +63,7 @@ for i = 1:numel(names)
         tempr31(j) = r(1);
         r31ref(j) = mean(set{j}.reference(:,2)./set{j}.reference(:,1));
     end
-    [intensity,idx] = sort(intensity);
+    [intensity, idx] = sort(intensity);
     tempr31 = tempr31(idx);
     % Assign 31R values to 'sample'
     sample.(names{i}).intensity = intensity;
@@ -54,7 +72,7 @@ for i = 1:numel(names)
     clear tempr31 idx intensity
 end
 %% Obtain scrambling coefficients
-xx = [];yy = [];
+xx = []; yy = [];
 for i = 1:numel(names)
     for j = 1:numel(sample.(names{i}).r31)
         s = measureScrambling(...
@@ -73,17 +91,19 @@ for i = 1:numel(names)
     plot(x,y,'o','Color',color)
     hold on;
 end
+
 %% Perform logarithmic fit and plot the results
 [xData, yData] = prepareCurveData(xx, yy);
 ft = fittype( 'a*log(x)+b', 'independent', 'x', 'dependent', 'y' );
+%ft = fittype('a*(x-c)/(1+b*(x-c))', 'independent', 'x', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
 opts.StartPoint = [0.001, 0.1];
+%opts.StartPoint = [0.001, 0.1, 0];
 [fitresult, gof] = fit(xData, yData, ft, opts);
 
 conf = confint(fitresult);
 
-r2(i) = gof.rsquare;
 plot(fitresult)
 txt = ['s = ',num2str(fitresult.a),' \times Log(V) + ',num2str(fitresult.b),'\newliner^2 = ',num2str(gof.rsquare)];
 ylim([.99*min(yy),1.01*max(yy)])
@@ -93,7 +113,7 @@ ylabel('Scrambling Coefficient')
 print_settings
 ax = gca;
 ax.XTick = [250,2500,4500];
-ax.YTick = [.086, .093];
+ax.YTick = [.086, .092];
 ax.Children(1).LineWidth = 1.5;
 ax.Children(1).Color = [0, 0, 0];
 ax.Legend.Location = 'southeast';

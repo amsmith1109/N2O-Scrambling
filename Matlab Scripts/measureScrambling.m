@@ -1,4 +1,4 @@
-function out = measureScrambling(sa,ref,rr31,r31ref,s)
+function out = measureScrambling(sa, ref, rr31, sensitivity)
     %% Input Definitions
     % sa & ref are the known ratios for the calibration run. These should
     % be a nx3 matrix, where n is the number of calibration runs.
@@ -25,12 +25,15 @@ function out = measureScrambling(sa,ref,rr31,r31ref,s)
     % substituted species should be identical to the reference gas.
     % The commented out errorFunction is the calculation without the
     % double substitution correction.
-    sad = ref;
-    sad(2) = sad(2) + sa(2)*s;
+    if ~exist('sensitivity')
+        sensitivity = 0;
+    end
+    sa_adjustmnet = ref;
+    sa_adjustmnet(2) = sa_adjustmnet(2) + sa(2)*sensitivity;
     I31correction = @(R,s) (s*R(1)+(1-s)*R(2))*R(3) + R(1)*R(2);
 %     errorFunction = @(s) I31(sa, s)./I30(sa, s).*I30(ref, s)./I31(ref, s) - rr31;
     errorFunction = @(s) ...
-        (I31(sa, s) + I31correction(sad,s))./I30(sa, s).*... %31r sample
+        (I31(sa, s) + I31correction(sa_adjustmnet,s))./I30(sa, s).*... %31r sample
         I30(ref, s)./(I31(ref, s) + I31correction(ref,s))... %31r reference
         - rr31; %measured 31r_sa/31r_ref
     out = fzero(errorFunction, [0,.5]);

@@ -3,7 +3,7 @@ classdef IsoData
         sample(10,3) double {mustBeReal, mustBeFinite}
         reference(11,3) double {mustBeReal, mustBeFinite}
         refID = 'praxair';
-        AMU(3,1) int32 {mustBeReal, mustBeFinite}
+        AMU(3,1)
     end
     properties (Dependent)
         rref
@@ -20,7 +20,7 @@ classdef IsoData
                     obj.refID = samp.refID;
                     obj.AMU = samp.AMU;
                 end
-            elseif nargin==4
+            else
                 obj.sample = samp;
                 obj.reference = ref;
                 obj.refID = ID;
@@ -30,21 +30,14 @@ classdef IsoData
         
         % r() calculates the intensity ratios. 
         % idx specifies the reference isotologue (typically 1)
-        function [out, error] = r(obj, idx)
+        function out = r(obj, idx)
             if nargin==1
-                idx = 1;
+                idx = 1
             end
             I_sa = obj.sample(:,idx+1)./obj.sample(:,1);
             I_ref = refR(obj, idx);
             out = mean(I_sa./I_ref); %measurement
-            error = std(I_sa./I_ref)/sqrt(numel(I_sa)); %standard error
-        end
-        
-        function [out, error] = refr(obj, idx)
-            if nargin==1
-                idx = 1;
-            end
-            
+            out(2) = std(I_sa./I_ref)/sqrt(numel(I_sa)); %standard error
         end
         
         % R() calculates the actual ratio of isotopologues (e.g. 15N/14N)
@@ -91,7 +84,11 @@ classdef IsoData
             out(2) = abs(1000/r_ref)*r_sa(2);
         end
         
-
+        
+        function out = rr(obj, idx)
+            sa_numerator = obj.sample(:,idx+1);
+            sa_denominator = obj.sample(:,idx+1);
+        end
     end
 end
 

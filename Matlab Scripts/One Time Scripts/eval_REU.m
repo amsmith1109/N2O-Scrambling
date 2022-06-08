@@ -8,6 +8,9 @@ load praxair
 %% Get the 45R for each calibration sample
 % refR picks out the praxair 15Ra, 15Rb and 17R for easy reference.
 refR = [praxair.R15a, praxair.R15b, praxair.R17];
+
+
+
 % names is calibration sample's names (e.g. A2, B1...)
 names = fields(N2O);
 for i = 1:numel(names)
@@ -44,16 +47,15 @@ for i = 1:numel(names)
         intensity(j) = mean(set{j}.sample(:,1));
         r = set{j}.r(1);
         tempr31(j) = r(1);
-        r31ref(j) = mean(set{j}.reference(:,2)./set{j}.reference(:,1));
     end
     [intensity,idx] = sort(intensity);
     tempr31 = tempr31(idx);
     % Assign 31R values to 'sample'
     sample.(names{i}).intensity = intensity;
     sample.(names{i}).r31 = tempr31;
-    sample.(names{i}).r31ref = r31ref;
     clear tempr31 idx intensity
 end
+
 %% Obtain scrambling coefficients
 xx = [];yy = [];
 for i = 1:numel(names)
@@ -62,7 +64,6 @@ for i = 1:numel(names)
             sample.(names{i}).R_ind,...
             refR,...
             sample.(names{i}).r31(j),...
-            sample.(names{i}).r31ref(j),...
             0.0173);
         sample.(names{i}).s(j) = s;
     end
@@ -78,15 +79,14 @@ end
 %% Perform logarithmic fit and plot the results
 [xData, yData] = prepareCurveData(xx, yy);
 ft = fittype( 'a*log(x)+b', 'independent', 'x', 'dependent', 'y' );
-%ft = fittype('a*(x-c)/(1+b*(x-c))', 'independent', 'x', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
 opts.StartPoint = [0.001, 0.1];
-%opts.StartPoint = [0.001, 0.1, 0];
 [fitresult, gof] = fit(xData, yData, ft, opts);
 
 conf = confint(fitresult);
 
+r2(i) = gof.rsquare;
 plot(fitresult)
 txt = ['s = ',num2str(fitresult.a),' \times Log(V) + ',num2str(fitresult.b),'\newliner^2 = ',num2str(gof.rsquare)];
 ylim([.99*min(yy),1.01*max(yy)])
@@ -96,7 +96,7 @@ ylabel('Scrambling Coefficient')
 print_settings
 ax = gca;
 ax.XTick = [250,2500,4500];
-ax.YTick = [.086, .092];
+ax.YTick = [.086, .093];
 ax.Children(1).LineWidth = 1.5;
 ax.Children(1).Color = [0, 0, 0];
 ax.Legend.Location = 'southeast';
@@ -104,66 +104,26 @@ p = predint(fitresult,x,.95,'observation','on');
 plot(x,p,'r-')
 % pf = predint(fitresult,x,.95,'function','on');
 % plot(x,pf,'b-')
-legend([ax.Children(3),ax.Children(2)],txt,'95% Confidence of Observation')
+% legend([ax.Children(3),ax.Children(2)],txt,'95% Confidence of Observation')
 
 
-%% Sensitivity Test for varying scrambling of 14N15N16O (\kappa)
-% +/- 10% shift in \kappa is approximately equal to the 95% confidence
-% interval of observed scrambling coefficients.
-
-% figure 
-% xx = [];yy = [];
-% for i = 1:numel(names)
-%     for j = 1:numel(sample.(names{i}).r31)
-%         s = measureScrambling(...
-%             sample.(names{i}).R_ind,...
-%             refR,...
-%             sample.(names{i}).r31(j),...
-%             sample.(names{i}).r31ref(j),...
-%             .9);
-%         sample.(names{i}).s(:,j) = s(1);
-%     end
-%     color = [(i-1)/10,0,(11-i)/10];
-%     [x,idx] = sort(sample.(names{i}).intensity);
-%     y = sample.(names{i}).s(idx);
-%     xx = [xx,x];
-%     yy = [yy,y];
-% %     plot(x,y,'o','Color',color)
-%     hold on;
-% end
-% [xData, yData] = prepareCurveData(xx, yy);
-% ft = fittype( 'a*log(x)+b', 'independent', 'x', 'dependent', 'y' );
-% opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
-% opts.Display = 'Off';
-% opts.StartPoint = [0.001, 0.1];
-% [fitresult, gof] = fit(xData, yData, ft, opts);
-% plot(fitresult)
-% legend(names)
-% % figure
-% xx = [];yy = [];
-% for i = 1:numel(names)
-%     for j = 1:numel(sample.(names{i}).r31)
-%         s = measureScrambling(...
-%             sample.(names{i}).R_ind,...
-%             refR,...
-%             sample.(names{i}).r31(j),...
-%             sample.(names{i}).r31ref(j),...
-%             1.1);
-%         sample.(names{i}).s(:,j) = s(1);
-%     end
-%     color = [(i-1)/10,0,(11-i)/10];
-%     [x,idx] = sort(sample.(names{i}).intensity);
-%     y = sample.(names{i}).s(idx);
-%     xx = [xx,x];
-%     yy = [yy,y];
-% %     plot(x,y,'o','Color',color)
-%     hold on;
-% end
-% [xData, yData] = prepareCurveData(xx, yy);
-% ft = fittype( 'a*log(x)+b', 'independent', 'x', 'dependent', 'y' );
-% opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
-% opts.Display = 'Off';
-% opts.StartPoint = [0.001, 0.1];
-% [fitresult, gof] = fit(xData, yData, ft, opts);
-% plot(fitresult)
-% legend(names)
+%% Get R45, R31, and scrambling for each REU measurement
+for i = 1:6
+    REU.R45(i) = REU.N2O{i}.R(1);
+    REU.R46(i) = REU.N2O{i}.R(2);
+    REU.R_ind{i} = ...
+        [praxair.R15a, ...                              %15Ra
+        (REU.R45(i) - praxair.R45) + praxair.R15b, ...  %15Rb
+        praxair.R17];                                   %17R
+    REU.intensity(i) = mean(REU.NO{i}.sample(:,1));
+    REU.r31(i) = REU.NO{i}.r(1);
+    REU.s(i) = measureScrambling(...
+                                REU.R_ind{i},...
+                                refR,...
+                                REU.r31(i),...
+                                -0.1);
+    clr = REU.R45(i)/0.0177;
+    color = [0, clr, 1-clr];
+  
+end
+plot(REU.intensity,REU.s,'ko','MarkerSize',10,'LineWidth',3)
