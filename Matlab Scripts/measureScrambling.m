@@ -8,6 +8,15 @@ function out = measureScrambling(sa, ref, rr31, sensitivity)
     % are given by the 31r of the sample divided by the 31r of the
     % reference gas.
     %
+    %% sensitivity
+    % This was added to account for an adjustment to the known 15R values
+    % after it found that the spike also increase R46.
+    if ~exist('sensitivity')
+        sensitivity = 0;
+    end
+    sa_adjustmnet = ref;
+    sa_adjustmnet(2) = sa_adjustmnet(2) + sa(2)*sensitivity;
+    %
     %% Functional definitions
     % Ixx represent the ion current for the xx AMU measurement in terms of isotope ratios
     %
@@ -19,22 +28,19 @@ function out = measureScrambling(sa, ref, rr31, sensitivity)
     % coefficient if it is different for 15Na and 15Nb.
     I30 = @(R, s) 1 + s*R(1) + (1-s)*R(2);
     I31 = @(R, s) (1-s)*R(1) + s*R(2) + R(3);
+    %
+    %
     % Below is a correction to I31 that includes double substituted
     % species. This is separated from the I31 signal since calibration gas
     % is spiked with single substituted 15Nb. Therefore the double
     % substituted species should be identical to the reference gas.
     % The commented out errorFunction is the calculation without the
     % double substitution correction.
-    if ~exist('sensitivity')
-        sensitivity = 0;
-    end
-    sa_adjustmnet = ref;
-    sa_adjustmnet(2) = sa_adjustmnet(2) + sa(2)*sensitivity;
-    I31correction = @(R,s) (s*R(1)+(1-s)*R(2))*R(3) + R(1)*R(2);
 %     errorFunction = @(s) I31(sa, s)./I30(sa, s).*I30(ref, s)./I31(ref, s) - rr31;
+    I31doubles = @(R,s) (s*R(1)+(1-s)*R(2))*R(3) + R(1)*R(2);
     errorFunction = @(s) ...
-        (I31(sa, s) + I31correction(sa_adjustmnet,s))./I30(sa, s).*... %31r sample
-        I30(ref, s)./(I31(ref, s) + I31correction(ref,s))... %31r reference
+        (I31(sa, s) + I31doubles(sa_adjustmnet,s))./I30(sa, s).*... %31r sample
+        I30(ref, s)./(I31(ref, s) + I31doubles(ref,s))... %31r reference
         - rr31; %measured 31r_sa/31r_ref
     out = fzero(errorFunction, [0,.5]);
     % Below is code that calculates the scrambling using the generally
