@@ -1,7 +1,7 @@
 clear all; close all; clc;
 load praxair
 %% Configure inputs
-range = -100:2.5:100;
+range = 0:1:30;
 mu = 0.09;
 sigma = 0.01;
 R15a = praxair.R15a;
@@ -17,7 +17,7 @@ opts.Normalize = 'off';
 opts.StartPoint = rand(1, 3);
 %% Loop through the range to capture how variance in site preference changes
 for i = range
-    s = gauss([1e4,1], mu, sigma);
+    s = gauss([1e2,1], mu, sigma);
     sp = [];
     %% Loop through each randomly generated s value
     for j = 1:numel(s)
