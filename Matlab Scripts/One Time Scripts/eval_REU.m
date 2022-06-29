@@ -9,8 +9,6 @@ load praxair
 % refR picks out the praxair 15Ra, 15Rb and 17R for easy reference.
 refR = [praxair.R15a, praxair.R15b, praxair.R17];
 
-
-
 % names is calibration sample's names (e.g. A2, B1...)
 names = fields(N2O);
 for i = 1:numel(names)
@@ -78,6 +76,7 @@ end
 
 %% Perform logarithmic fit and plot the results
 [xData, yData] = prepareCurveData(xx, yy);
+%ft = fittype( 'a*log(x)+b', 'independent', 'x', 'dependent', 'y' );
 ft = fittype( 'a*log(x)+b', 'independent', 'x', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
@@ -121,7 +120,7 @@ for i = 1:6
                                 REU.R_ind{i},...
                                 refR,...
                                 REU.r31(i),...
-                                -0.1);
+                                0.0173);
     clr = REU.R45(i)/0.0177;
     color = [0, clr, 1-clr];
   

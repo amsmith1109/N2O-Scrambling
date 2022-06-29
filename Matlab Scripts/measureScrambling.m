@@ -14,8 +14,8 @@ function out = measureScrambling(sa, ref, rr31, sensitivity)
     if ~exist('sensitivity')
         sensitivity = 0;
     end
-    sa_adjustmnet = ref;
-    sa_adjustmnet(2) = sa_adjustmnet(2) + sa(2)*sensitivity;
+    sa_adjustment = ref;
+    sa_adjustment(2) = sa_adjustment(2) + sa(2)*sensitivity;
     %
     %% Functional definitions
     % Ixx represent the ion current for the xx AMU measurement in terms of isotope ratios
@@ -39,7 +39,7 @@ function out = measureScrambling(sa, ref, rr31, sensitivity)
 %     errorFunction = @(s) I31(sa, s)./I30(sa, s).*I30(ref, s)./I31(ref, s) - rr31;
     I31doubles = @(R,s) (s*R(1)+(1-s)*R(2))*R(3) + R(1)*R(2);
     errorFunction = @(s) ...
-        (I31(sa, s) + I31doubles(sa_adjustmnet,s))./I30(sa, s).*... %31r sample
+        (I31(sa, s) + I31doubles(sa_adjustment,s))./I30(sa, s).*... %31r sample
         I30(ref, s)./(I31(ref, s) + I31doubles(ref,s))... %31r reference
         - rr31; %measured 31r_sa/31r_ref
     out = fzero(errorFunction, [0,.5]);
