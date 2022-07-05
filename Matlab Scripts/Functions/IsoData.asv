@@ -26,7 +26,7 @@
 % delta: calculates the isotopic compositions deviation from the accepted
 % international standard. Depends on R and hidden properties in the
 % reference gas.
-%% Code:
+
 classdef IsoData
     properties
         sample(10,3) double {mustBeReal, mustBeFinite}
@@ -123,7 +123,7 @@ classdef IsoData
 
     end
 end
-%% Functions shared with the object definition
+
 % refR() returns an average r value for for the reference gas.
 % This is done because the reference is measured before and after
 % any sample gas is measured. The average is supposed to correct
