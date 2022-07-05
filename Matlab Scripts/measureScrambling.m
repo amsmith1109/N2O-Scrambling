@@ -1,4 +1,4 @@
-function out = measureScrambling(sa, ref, rr31, sensitivity)
+function out = measureScrambling(sa, ref, rr31, doubles)
     %% Input Definitions
     % sa & ref are the known ratios for the calibration run. These should
     % be a nx3 matrix, where n is the number of calibration runs.
@@ -11,11 +11,9 @@ function out = measureScrambling(sa, ref, rr31, sensitivity)
     %% sensitivity
     % This was added to account for an adjustment to the known 15R values
     % after it found that the spike also increase R46.
-    if ~exist('sensitivity')
-        sensitivity = 0;
+    if ~exist('doubles')
+        doubles = sa;
     end
-    sa_adjustment = ref;
-    sa_adjustment(2) = sa_adjustment(2) + sa(2)*sensitivity;
     %
     %% Functional definitions
     % Ixx represent the ion current for the xx AMU measurement in terms of isotope ratios
@@ -39,7 +37,7 @@ function out = measureScrambling(sa, ref, rr31, sensitivity)
 %     errorFunction = @(s) I31(sa, s)./I30(sa, s).*I30(ref, s)./I31(ref, s) - rr31;
     I31doubles = @(R,s) (s*R(1)+(1-s)*R(2))*R(3) + R(1)*R(2);
     errorFunction = @(s) ...
-        (I31(sa, s) + I31doubles(sa_adjustment,s))./I30(sa, s).*... %31r sample
+        (I31(sa, s) + I31doubles(doubles, s))./I30(sa, s).*... %31r sample
         I30(ref, s)./(I31(ref, s) + I31doubles(ref,s))... %31r reference
         - rr31; %measured 31r_sa/31r_ref
     out = fzero(errorFunction, [0,.5]);
