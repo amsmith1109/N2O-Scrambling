@@ -38,91 +38,73 @@ for i = 1:numel(names)
     set = NO.(names{i});
     [intensity, delta, uncertainty] = calcR(set,praxair.rref(1));
     D31(i) = mean(delta);
-    err31(i) = 1.95*std(delta)/sqrt(numel(delta));
+    err31(i) = 1.95 * std(delta) / sqrt(numel(delta));
     set = N2O.(names{i});
     [intensity, delta, uncertainty] = calcR(set,praxair.rref(2));
     D45(i) = mean(delta);
 end
-figure
-% errorbar(D45,D31,err31,'.','MarkerSize',10,'LineWidth',1.5,'CapSize',6)
-ft = polyfit(D45,D31,1);
-plot(D45,polyval(ft,D45),'r',D45,D31,'bo','LineWidth',1.5,'MarkerSize',5)
-% hold on;
-% plot(D45,D31,'bo','MarkerSize',5,'LineWidth',1.5)
-ax = gca;
-ax.XLabel.String = '\delta^{45} (‰)';
-ax.YLabel.String = '\delta^{31} (‰)';
-ax.XTick = [100,550,1000];
-ax.YTick = [0,80,160];
-ax.XLim = [0,1050];
-slp = num2str(ft(1));
-offset = num2str(ft(2));
-% legend(ax.Children(2),['y = ',slp,'x + ',offset])
-% legend('location','NorthWest')
-fullscreen = 0;
-print_settings;
 
-names = fliplr({'A0','B0','C1','C2'});
+% Samples for the double axis d31 vs d45 plots were selected to cover a
+% broad range and clearly show the effect of intensity on determination of
+% the scrambling coefficient
+names = fliplr({'A0', 'B0', 'C1', 'C2'});
 fig = figure;
 for i = 1:numel(names)
     subplot(2,2,i)
     %% First run NO on left axis
     set = NO.(names{i});
-    [intensity, delta, uncertainty] = calcR(set,praxair.rref(1));
+    [intensity, delta, uncertainty] = calcR(set, praxair.rref(1));
     yyaxis left
-    plotter(intensity, delta, uncertainty, x_label, y_label1);
+    plotter(intensity, delta, uncertainty, x_label, y_label1 , '^');
     ax = gca;
     ylimit = ax.YLim;
-    dx = round(diff(ylimit)/2,1);
-    mid = round(mean(ylimit),1);
-    ax.YTick = [mid-dx,mid,mid+dx];
-    ax.YLim = [ax.YTick(1),ax.YTick(end)];
-    xrng = [ax.XTick(1),ax.XTick(end)];
-    yrng = [ax.YTick(1),ax.YTick(end)];
-    xloc = xrng(1)+.025*diff(xrng);
-    yloc = yrng(end)-.075*diff(yrng);
+    dx = round(diff(ylimit)/2, 1);
+    mid = round(mean(ylimit), 1);
+    ax.YTick = [mid-dx, mid, mid+dx];
+    ax.YLim = [ax.YTick(1), ax.YTick(end)];
+    xrng = [ax.XTick(1), ax.XTick(end)];
+    yrng = [ax.YTick(1), ax.YTick(end)];
+    xloc = xrng(1) + .025 * diff(xrng);
+    yloc = yrng(end) - .075 * diff(yrng);
     text(xloc,yloc,['(',i+64,')']);
     %% Run N2O on right axis, and scale Axis to match range of NO
     set = N2O.(names{i});
     [intensity, delta, uncertainty] = calcR(set,praxair.rref(2));
     D45(i) = mean(delta);
     yyaxis right
-    plotter(intensity, delta, uncertainty, x_label,y_label2);
+    plotter(intensity, delta, uncertainty, x_label, y_label2 , 'v');
     ax = gca;
     mid_point = round(mean(ax.YLim),0);
     ax.YTick = [mid_point-dx,mid_point,mid_point+dx];
     ax.YLim = [ax.YTick(1), ax.YTick(end)];
     file = [fname,' - ',names{i}];
 end
-% variable han is used to place a single y axis label for the delta 31 plots
-han=axes(fig,'visible','off');
-han.Title.Visible='on';
-han.XLabel.Visible='on';
-han.YLabel.Visible='on';
-xlabel(han,'30/44 AMU Intensity (mV)')
+% variable han is used to place a single y axis label for the delta 31/45 plots
+han = axes(fig, 'visible', 'off');
+han.Title.Visible = 'on';
+han.XLabel.Visible = 'on';
+han.YLabel.Visible = 'on';
+xlabel(han,'30/44 m/z Intensity (mV)')
 q = han.XLabel.Position;
-han.XLabel.Position(2) = q(2)*1.025;
+han.XLabel.Position(2) = q(2) * 1.025;
 yyaxis(han,'left')
 p = han.YLabel.Position;
 ylabel('\delta^{31} (‰)')
-han.YLabel.Position(1) = p(1)*1.625;
-% I couldn't use han to set the right axis label, so I do it in a crude way
-% below by assigning it to the 4th subplot, and shifting it to the right
-% location.
-ax = gca;
-ax.YLabel.String = '\delta^{45} (‰)';
-ax.YLabel.Position(2) = 1019.75;
+han.YLabel.Position(1) = p(1) * 1.625;
+yyaxis(han, 'right')
+ylabel('\delta^{45} (‰)');
+han.YLabel.Visible = 'on';
 
-
-%% Cycle through plotting each sample
-function [I,d,dW] = calcR(set,rref)
+%% Each set has identical data analysis. This consolidates the code.
+% I is intensity
+% d is the delta value
+% dW is uncertainty of the delta value (lit. delta Weight)
+function [I, d, dW] = calcR(set, rref)
     R = [];
     I = [];
     for j = 1:numel(set)
         data = set{j};
-        ratios = data.R(1);
-        R(j) = ratios(1);
-        W(j) = ratios(2);
+        [R(j), W(j)] = data.R(1);
         I(j) = mean([data.reference(:,1)]);
     end
     [I idx] = sort(I);
@@ -151,15 +133,17 @@ function [I,d,dW] = calcR(set,rref)
     dW = 2*1.95*W*1000/rref;
 end
 
-function f = plotter(I,d,dW,xlab,ylab,fname)
-%     f = figure;
-    errorbar(I,d,dW,'.','MarkerSize',10,'LineWidth',1.5,'CapSize',6)
-%     plot(I,d,'o','MarkerSize',10,'LineWidth',1.5)
-%     xlabel(xlab)
-%     ylabel(ylab)
+% Each plot uses a number of the same settings. This function just
+% consolidates the code.
+function f = plotter(I, d, dW, xlab, ylab, marker)
+    errorbar( I, d, dW, ...
+        marker,...
+        'MarkerSize', 5,...
+        'LineWidth', 1.5,...
+        'CapSize', 6)
     print_settings;
-    xlim([0,4500])
-    xticks([100,2250,4500])
+    xlim([0, 5000])
+    xticks([100, 2500, 5000])
 end
 
 function savefig(f,fname)

@@ -99,7 +99,7 @@ txt = ['$s = \frac{a\cdot I + b}',...
     ', r^2 = ',num2str(gof.rsquare),'$'];
 ylim([.99*min(yy),1.01*max(yy)])
 xlim([.8*min(xx),1.01*max(xx)])
-xlabel('30 AMU Intensity (mV)')
+xlabel('30 m/z Intensity (mV)')
 ylabel('Scrambling Coefficient')
 print_settings
 ax = gca;

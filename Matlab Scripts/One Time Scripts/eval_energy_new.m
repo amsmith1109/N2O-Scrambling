@@ -44,11 +44,12 @@ for i = range
 end
 
 k = -1;
-markers = {'*','+','o','^'};
+markers = {'*','v','o','^'};
 lines = {':','--','-.','-'};
 for i = range
     k = k+1;
     color = [k/4, 0, (4-k)/4];
+    clr{i} = color;
     ft = scrambleTrend(I{i}, s{i});
     r = s{i} - feval(ft,I{i});
     sig = std(r);
@@ -59,14 +60,14 @@ for i = range
     
     [fit{i}, gof{i}, p(i), lim{i}] = scrambleTrend(I{i}, s{i});
     
-%     errorbar(newI{i}, newS{i},...
-%         -sigy{i},sigy{i},...
-%         -sigx{i},sigx{i},...
-%         markers{i},...
-%         'color', color);
-    plot(I{i}, s{i},...
+    errorbar(newI{i}, newS{i},...
+        -sigy{i},sigy{i},...
+        -sigx{i},sigx{i},...
         markers{i},...
         'color', color);
+%     plot(I{i}, s{i},...
+%         markers{i},...
+%         'color', color);
     hold on;
     xx = linspace(0, max(I{i})*1.1);
     yy = feval(fit{i},xx);
@@ -75,6 +76,7 @@ for i = range
         'color',color);
     fit{i};
 end
+markers = {'*','v','o','^'};
 
 %% Modify display of the plot
 xlim([400, 1600])
@@ -84,6 +86,6 @@ ax.XTick = [400, 1000, 1600];
 ax.YTick = [0.083, 0.086, 0.089];
 ylabel('Scrambling Coefficient')
 xlabel('30 AMU Intensity (mV)')
-eV = {'70 eV', '90 eV', '110 eV', '124 eV'};
-legend([ax.Children(1:2:end)], eV)
+eV = {'70 eV (*)', '90 eV (?)', '110 eV (o)', '124 eV (?)'};
+legend([ax.Children(1:2:end)], eV, 'Location', 'SouthEast')
 print_settings
