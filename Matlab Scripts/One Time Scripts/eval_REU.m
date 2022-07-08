@@ -110,7 +110,7 @@ ax.Children(1).Color = [0, 0, 0];
 ax.Legend.Location = 'southeast';
 p = predint(fitresult,x,.95,'observation','on');
 plot(x,p,'r-')
-lgd = legend([ax.Children(2)], txt);
+lgd = legend([ax.Children(3)], txt);
 lgd.Interpreter = 'latex';
 lgd.FontSize = 12;
 

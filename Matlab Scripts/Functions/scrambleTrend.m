@@ -1,10 +1,30 @@
 function [fitresult, gof, p, limits] = scrambleTrend(x,y)
 %% Perform the fit
+% if ~exist('w')
+%     w = ones(size(x));
+% end
+
+% if ~exist('bounds')
+%     bounds = [0,1,0];
+% end
+% [xData, yData, weights] = prepareCurveData(x, y, w);
 [xData, yData] = prepareCurveData(x, y);
-ft = fittype( '(a*x+b)/(1+c*(a*x+b))', 'independent', 'x', 'dependent', 'y' );
+
+ft = fittype( '(a*x-b)/(1+c*(a*x-b))', 'independent', 'x', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
-opts.StartPoint = [0.001, 1, 100];
+opts.DiffMaxChange = 1;
+opts.Display = 'Off';
+opts.MaxFunEvals = 1000;
+opts.Upper = [inf, 0, inf];
+opts.Lower = [0, -inf, 0];
+opts.MaxIter = 1000;
+opts.Robust = 'LAR';
+opts.StartPoint = [0.1 0 100];
+opts.TolFun = 1e-08;
+opts.TolX = 1e-08;
+% opts.Weights = weights;
+
 [fitresult, gof] = fit(xData, yData, ft, opts);
 
 conf = confint(fitresult);
