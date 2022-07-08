@@ -84,7 +84,7 @@ han = axes(fig, 'visible', 'off');
 han.Title.Visible = 'on';
 han.XLabel.Visible = 'on';
 han.YLabel.Visible = 'on';
-xlabel(han,'Intensity (mV)')
+xlabel(han,'30/44 m/z Intensity (mV)')
 q = han.XLabel.Position;
 han.XLabel.Position(2) = q(2) * 1.025;
 yyaxis(han,'left')
