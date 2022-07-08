@@ -78,10 +78,11 @@ classdef IsoData
         
         % R() calculates the actual ratio of isotopologues (e.g. 15N/14N)
         % Note that this does not account for scrambling!
-        function out = R(obj, idx)
+        function [out, error] = R(obj, idx)
             ref = obj.rref;
-            r = obj.r(idx);
+            [r, error] = obj.r(idx);
             out = r*ref(idx+1);
+            error = error*ref(idx+1);
         end
         
         % rref() returns the isotopologue ratio of the reference gas.
