@@ -1,3 +1,22 @@
+% This script was used to calculate the changes in site-preference accuracy
+% that is discussed in the Discussion portion of the paper.
+% 
+% This script generates a ficticious sample that has been enriched or
+% depleted in the alpha position. It generates what type of measurement the
+% IRMS would return with a given "true" scrambling coefficient, and
+% calculates the site-preference based on the "calibration" scrambling
+% coefficient.
+%
+% Warning:
+% This was a working file and was edited multiple times for checking
+% different configurations. Whatever is saved here is just the last version
+% of it.
+%
+% It originated from the sp_bootstrap_text.m file, and many parts have not
+% been cleaned up. The important part is to make sure that in the loop, s
+% is used for calculating the anticipated voltage ratio, and s0 is the
+% scrambling coefficient used for calculating the individual ratios.
+
 clear all; close all; clc;
 load praxair
 %% Configure inputs

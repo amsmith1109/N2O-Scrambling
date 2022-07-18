@@ -1,3 +1,7 @@
+% Unpublished Result
+%
+% This script was used to check if errors were gaussian.
+
 close all; clear all; clc;
 load Intensity_Residuals
 

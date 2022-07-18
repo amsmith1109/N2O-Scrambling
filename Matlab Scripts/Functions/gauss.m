@@ -1,4 +1,4 @@
-% simple function for getting random numbers that follow a gaussian
+% Simple function for getting random numbers that follow a gaussian
 % distribution.
 function out = gauss(size, mu, sigma)
     if ~exist('mu')

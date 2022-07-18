@@ -1,3 +1,7 @@
+% This script was used to compare R46 vs R45. It was here we discovered
+% that the spike was adding double-substitutions that were not accounted
+% for in the scrambling coefficient calculation.
+
 clear all; close all;
 load N2O
 names = fields(N2O);

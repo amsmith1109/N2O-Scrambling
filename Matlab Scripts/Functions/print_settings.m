@@ -1,3 +1,11 @@
+% This script is used for quickly scaling plots
+% Many of these commands were repetitively used through
+% each script that generated a plot.
+%
+% fullscreen refers to a full page width vs half page width.
+% these can be toggled by defining the fullscreen variable
+% before calling the script. 0 = half page, 1 = full page.
+
 ax = gca;
 ax.FontSize = 11;
 ax.FontName = 'SansSerif';

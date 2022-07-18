@@ -1,3 +1,10 @@
+% Unpublished Result
+%
+% This script was used to see how variability in scrambling (based on the
+% standard deviation, not standard error) would propagate to site
+% preference measurements. Results appeared to follow the same 1% error in
+% s follow a 0.25% error in site-preference.
+
 clear all; close all; clc;
 load praxair
 %% Configure inputs

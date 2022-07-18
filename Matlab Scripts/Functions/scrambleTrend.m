@@ -1,13 +1,21 @@
-function [fitresult, gof, p, limits] = scrambleTrend(x,y)
-%% Perform the fit
-% if ~exist('w')
-%     w = ones(size(x));
-% end
+% Performs a trend analysis based on the S-curve described in the paper.
+%
+% Requirements:
+% Curve Fitting Toolbox
+%
+% Inputs:
+% x = intensity
+% y = scrambling coefficient
+%
+% Outputs:
+% fitresult = cfit object that has the fit parameters. It can be used to
+% calculate the uncertainty bounds of fit results.
+% gof = goodness of fit. Used to return statistical data
+% p = p-value for persistance of a trend. Null hypothesis is the first
+% coefficient is < 0.
+% limits = lower and upper limite of scrambling coefficient. 
+function [fitresult, gof, p, limits] = scrambleTrend(x, y)
 
-% if ~exist('bounds')
-%     bounds = [0,1,0];
-% end
-% [xData, yData, weights] = prepareCurveData(x, y, w);
 [xData, yData] = prepareCurveData(x, y);
 
 ft = fittype( '(a*x-b)/(1+c*(a*x-b))', 'independent', 'x', 'dependent', 'y' );
