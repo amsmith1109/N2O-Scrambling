@@ -8,7 +8,6 @@ load praxair
 %% Get the 45R for each calibration sample
 % refR picks out the praxair 15Ra, 15Rb and 17R for easy reference.
 refR = [praxair.R15a, praxair.R15b, praxair.R17];
-
 % names is calibration sample's names (e.g. A2, B1...)
 names = fields(N2O);
 for i = 1:numel(names)
@@ -33,7 +32,15 @@ for i = 1:numel(names)
                                     praxair.R17];   %17R
     sample.(names{i}).doubles = [praxair.R15a,...
                                 tempR46 - praxair.R18 + praxair.R15b,...
-                                praxair.R17];
+                                praxair.R17];   
+%     sample.(names{i}).doubles = [praxair.R15a,...
+%                                 (tempR45 - praxair.R45)/.98 + praxair.R15b,...
+%                                 praxair.R17];                              
+% Below is the calculation that assumed the double substituted species are
+% identical to the reference gas, i.e., unspiked.
+%     sample.(names{i}).doubles = [praxair.R15a,...
+%                                 praxair.R15b,...
+%                                 praxair.R17];
     clear tempR45
     clear tempR46
 end
