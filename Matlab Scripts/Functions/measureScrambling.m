@@ -40,7 +40,7 @@ function out = measureScrambling(sa, ref, rr31, doubles)
         (I31(sa, s) + I31doubles(doubles, s))./I30(sa, s).*... %31r sample
         I30(ref, s)./(I31(ref, s) + I31doubles(ref,s))... %31r reference
         - rr31; %measured 31r_sa/31r_ref
-    out = fzero(errorFunction, [0,.5]);
+    out = fzero(errorFunction, [0,1]);
     % Below is code that calculates the scrambling using the generally
     % used method for obtaining the measured ratios. Where:
     % R = r_sa/r_ref x R_ref
