@@ -1,10 +1,9 @@
 % Unpublished Result
 %
 % This script was used to check if errors were gaussian.
-
 close all; clear all; clc;
-load Intensity_Residuals
 
+load Intensity_Residuals
 bins = residual.hist(:,1);
 counts = residual.hist(:,2);
 [xData, yData] = prepareCurveData( bins, counts );
