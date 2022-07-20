@@ -4,6 +4,8 @@
 
 clear all; close all;
 load N2O
+load praxair
+load N2O_data
 names = fields(N2O);
 for i= 1:numel(names)
     set = N2O.(names{i});
@@ -24,4 +26,16 @@ end
 ft = polyfit(R45av,d46av,1);
 plot(R45av,d46av,'o')
 hold on
-plot(R45av,polyval(ft,R45av))
+plot(R45av,polyval(ft, R45av))
+
+for i = 1:numel(names)
+R18 = praxair.R18;
+R = N2O_data.(names{i});
+doubles = R(1:3);
+doubles(2) = R(4);
+R(4) = R18;
+val = invRM(R,0.86,doubles);
+R46(i) = val(3);
+end
+d46 = sort((R46./praxair.rref(3)-1)*1000)
+plot(sort(R45av), sort(d46),'*')

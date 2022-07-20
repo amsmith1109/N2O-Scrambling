@@ -118,7 +118,7 @@ classdef IsoData
             r_ref = ref.rref(id);
             r_sa = obj.R(idx);
             out(1) = (r_sa(1)/r_ref - 1)*1000;
-            out(2) = abs(1000/r_ref)*r_sa(2);
+            %out(2) = abs(1000/r_ref)*r_sa(2);
         end
         
 
