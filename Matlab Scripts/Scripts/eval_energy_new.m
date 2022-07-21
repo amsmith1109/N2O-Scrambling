@@ -1,7 +1,7 @@
 % Set up workspace
 clear all; clc; close all;
-load NO_energy_data
-load N2O_data
+load NO_energy_data.mat
+load N2O_data.mat
 load praxair
 
 names = fields(NO_energy_data);
@@ -16,8 +16,7 @@ for i = range
         rr31 = set.rr31(j);
         sa = N2O_data.(id)(1:3);
         ref = praxair.R_individual;
-        doubles = sa;
-        doubles(2) = N2O_data.(id)(4);
+        doubles = N2O_data.(id)(4:6);
         s{i}(j,1) = measureScrambling(...
             sa,...
             ref,...
@@ -76,11 +75,11 @@ for i = range
         'color',color);
     fit{i};
 end
-markers = {'*','v','o','^'};
+markers = {'*', 'v', 'o', '^'};
 
 %% Modify display of the plot
 xlim([400, 1600])
-ylim([0.083, 0.089])
+% ylim([0.083, 0.089])
 ax = gca;
 ax.XTick = [400, 1000, 1600];
 ax.YTick = [0.083, 0.086, 0.089];

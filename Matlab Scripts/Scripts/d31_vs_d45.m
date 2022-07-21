@@ -1,9 +1,10 @@
 %% Set up workspace
-clear all; clc; close all;
+clear all; 
+% clc; 
+close all;
 load N2O
 load NO
 load praxair
-
 
 %% N2O Data reduction
 % results are a table with the following:
@@ -23,9 +24,6 @@ for i = 1:n
     data.min(i,1) = mean(R(1:2));
     data.max(i,1) = mean(R(end-3:end-2));
 end
-
-%save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data_table.mat','N2O_data_table')
-%save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data.mat','N2O_data')
 
 %% NO Data Reduction
 for i = 1:n
@@ -66,10 +64,10 @@ xlabel('\delta^{45} (‰)');
 ax = gca;
 ylabel('\delta^{31} (‰)');
 
-ft = polyfit(data.max_delta(:,1), data.max_delta(:,2), 1);
-ft2 = polyfit(data.min_delta(:,1), data.min_delta(:,2), 1);
+ft = polyfit(data.max_delta(1:2,1), data.max_delta(1:2,2), 1);
+ft2 = polyfit(data.min_delta(1:2,1), data.min_delta(1:2,2), 1);
 
-xx = [0,1e3];
+xx = [0, 1e3];
 yy = polyval(ft, xx);
 yy2 = polyval(ft2, xx);
 plot(xx, yy, 'r--')
@@ -83,4 +81,19 @@ print_settings;
 s = @(ref, slope) (slope * ref.rref(1) * (ref.R15b + 1)) / ...
     (ref.rref(2) + slope * ref.rref(1) * (ref.R15b - ref.R15a));
 
-range = [s(praxair, ft2(1)), s(praxair, ft(1))]
+% range = [s(praxair, ft2(1)), s(praxair, ft(1))]
+% [ft(2), ft2(2)]
+
+R31 = praxair.rref(1);
+R45 = praxair.rref(2);
+R15a = praxair.R15a;
+R15b = praxair.R15b;
+R17 = praxair.R17;
+d31_m = data.max_delta(:,2);
+d45_m = data.max_delta(:,1);
+% Note that the d45 in the denominator has to be divided by 1000 to get rid
+% of the permil units for determining beta-added. The units remain in the
+% d45 in the numerator so that both sides have the same units.
+d31_p = @(d45, s) R45/R31 * d45 * (s + R17 + R15a) ./ (1 + s*R15a + (1-s)*(R15b + R45*d45/1000));
+fun = @(s) sum((d31_p(d45_m,s) - d31_m).^2);
+fminsearch(fun,.08)

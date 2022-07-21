@@ -12,8 +12,9 @@ function out = measureScrambling(sa, ref, rr31, doubles)
     % This was added to account for an adjustment to the known 15R values
     % after it found that the spike also increase R46.
     if ~exist('doubles')
-        doubles = sa;
+        doubles = ref;
     end
+    n = numel(rr31);
     %
     %% Functional definitions
     % Ixx represent the ion current for the xx AMU measurement in terms of isotope ratios
@@ -26,6 +27,8 @@ function out = measureScrambling(sa, ref, rr31, doubles)
     % coefficient if it is different for 15Na and 15Nb.
     I30 = @(R, s) 1 + s*R(1) + (1-s)*R(2);
     I31 = @(R, s) (1-s)*R(1) + s*R(2) + R(3);
+    I31doubles = @(R,s) (s*R(1) + (1-s)*R(2))*R(3) + R(1)*R(2);
+%     I31doubles = @(R,s) 0;
     %
     %
     % Below is a correction to I31 that includes double substituted
@@ -34,13 +37,17 @@ function out = measureScrambling(sa, ref, rr31, doubles)
     % substituted species should be identical to the reference gas.
     % The commented out errorFunction is the calculation without the
     % double substitution correction.
-%     errorFunction = @(s) I31(sa, s)./I30(sa, s).*I30(ref, s)./I31(ref, s) - rr31;
-    I31doubles = @(R,s) (s*R(1)+(1-s)*R(2))*R(3) + R(1)*R(2);
-    errorFunction = @(s) ...
-        (I31(sa, s) + I31doubles(doubles, s))./I30(sa, s).*... %31r sample
-        I30(ref, s)./(I31(ref, s) + I31doubles(ref,s))... %31r reference
-        - rr31; %measured 31r_sa/31r_ref
-    out = fzero(errorFunction, [0,1]);
+    for i = 1:n
+        errorFunction = @(s) ...
+            (I31(sa, s) + I31doubles(doubles, s))./I30(sa, s).*... %31r sample
+            I30(ref, s)./(I31(ref, s) + I31doubles(ref,s))... %31r reference
+            - rr31(i); %measured 31r_sa/31r_ref
+%             errorFunction = @(s) ...
+%             (I31(sa, s)) ./I30(sa, s).*... %31r sample
+%             I30(ref, s)./(I31(ref, s))... %31r reference
+%             - rr31(i); %measured 31r_sa/31r_ref
+        out(i) = fzero(errorFunction, [0,1]);
+    end
     % Below is code that calculates the scrambling using the generally
     % used method for obtaining the measured ratios. Where:
     % R = r_sa/r_ref x R_ref

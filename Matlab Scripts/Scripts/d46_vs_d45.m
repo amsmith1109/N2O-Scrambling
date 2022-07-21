@@ -23,19 +23,22 @@ for i= 1:numel(names)
     d46av(i) = mean(d46{i});
     hold on
 end
-ft = polyfit(R45av,d46av,1);
-plot(R45av,d46av,'o')
+ft = polyfit(R45av, d46av, 1);
+plot(R45av, d46av, 'o')
 hold on
 plot(R45av,polyval(ft, R45av))
 
 for i = 1:numel(names)
-R18 = praxair.R18;
-R = N2O_data.(names{i});
-doubles = R(1:3);
-doubles(2) = R(4);
-R(4) = R18;
-val = invRM(R,0.86,doubles);
-R46(i) = val(3);
+    R18 = praxair.R18;
+    R = N2O_data.(names{i});
+    doubles = R(4:6);
+    R(4) = R18;
+    val = invRM(R(1:4), 0.086, doubles);
+    R46(i) = val(3);
 end
-d46 = sort((R46./praxair.rref(3)-1)*1000)
+
+d46 = sort((R46 ./ praxair.rref(3) - 1) * 1000);
 plot(sort(R45av), sort(d46),'*')
+xlabel('\delta^{45}')
+ylabel('\delta^{46}')
+legend('Measured','y = mx + b', 'Calculated')

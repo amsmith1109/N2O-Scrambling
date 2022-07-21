@@ -1,12 +1,15 @@
+% Script to plot the scrambling of the intensity dataset vs the reduced
+% dataset in the varying ionization energy labeled 124eV
+
 clear all; clc;
 
-load('E:\My Documents\School\github\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\NO_data.mat')
-load('E:\My Documents\School\github\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\NO_energy_data.mat')
-load('E:\My Documents\School\github\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data.mat')
-load('E:\My Documents\School\github\N2O-Scrambling\Matlab Scripts\Data\praxair.mat')
+load praxair
+load NO_data_table
+load N2O_data
+load NO_energy_data
 
 d1 = NO_energy_data.NO124eV;
-d2 = NO_data;
+d2 = NO_data_table;
 for i = 1:numel(d1.Sample_name)
     name = d1.Sample_name{i};
     I(i) = d1.Intensity_mV(i);
