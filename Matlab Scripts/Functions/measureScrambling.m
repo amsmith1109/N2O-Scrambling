@@ -8,11 +8,14 @@ function out = measureScrambling(sa, ref, rr31, doubles)
     % are given by the 31r of the sample divided by the 31r of the
     % reference gas.
     %
-    %% sensitivity
-    % This was added to account for an adjustment to the known 15R values
-    % after it found that the spike also increase R46.
+
     if ~exist('doubles')
-        doubles = ref;
+        doubles = [0, 0, 0];
+        ref_dbl = [0, 0, 0];
+    else
+        ref_dbl = [ref(1)*ref(2),... 
+           ref(1)*ref(2),...
+           ref(2)*ref(3)];
     end
     n = numel(rr31);
     %
@@ -27,8 +30,15 @@ function out = measureScrambling(sa, ref, rr31, doubles)
     % coefficient if it is different for 15Na and 15Nb.
     I30 = @(R, s) 1 + s*R(1) + (1-s)*R(2);
     I31 = @(R, s) (1-s)*R(1) + s*R(2) + R(3);
-    I31doubles = @(R,s) (s*R(1) + (1-s)*R(2))*R(3) + R(1)*R(2);
-%     I31doubles = @(R,s) 0;
+    %
+    % Doubles consider the double-substitutions that contribute to the 31R
+    % signal. The terms used here are the ratios of the double substituted
+    % gas to 44-N2O.
+    % R(1) = alpha*beta, R(2) = alpha*17O, R(3) = beta*17O
+    I31doubles = @(R,s) R(1) + s*R(2) + (1-s)*R(3);
+%     I31doubles = @(R,s) R(1)*R(2) + s*R(1)*R(3) + (1-s)*R(2)*R(3);
+%     ref_dbl = ref;
+%     doubles = ref;
     %
     %
     % Below is a correction to I31 that includes double substituted
@@ -40,12 +50,8 @@ function out = measureScrambling(sa, ref, rr31, doubles)
     for i = 1:n
         errorFunction = @(s) ...
             (I31(sa, s) + I31doubles(doubles, s))./I30(sa, s).*... %31r sample
-            I30(ref, s)./(I31(ref, s) + I31doubles(ref,s))... %31r reference
+            I30(ref, s)./(I31(ref, s) + I31doubles(ref_dbl, s))... %31r reference
             - rr31(i); %measured 31r_sa/31r_ref
-%             errorFunction = @(s) ...
-%             (I31(sa, s)) ./I30(sa, s).*... %31r sample
-%             I30(ref, s)./(I31(ref, s))... %31r reference
-%             - rr31(i); %measured 31r_sa/31r_ref
         out(i) = fzero(errorFunction, [0,1]);
     end
     % Below is code that calculates the scrambling using the generally

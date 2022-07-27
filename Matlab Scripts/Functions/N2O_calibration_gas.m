@@ -1,14 +1,12 @@
 classdef N2O_calibration_gas
     %% Properties
     properties
-        type = '';
         creationDate = datetime;
         delta45 = [];
         delta46 = [];
         delta31 = [];
     end
     properties (Dependent)
-        R_individual
         R31
         R45
         R46
@@ -19,9 +17,10 @@ classdef N2O_calibration_gas
     end
     properties (Hidden)
         %% Values commonly used for calculating that don't need to be displayed
-        a = 0.00937035;
-        b = 0.516;
-        rref = [0.0040097716, 0.007687521659, 0.002071123491]; %"natural" 31R, 45R, 46R from N2-air & VSMOW
+        a
+        b
+        rref
+        R_individual
 %         rref = [0.0040564, 0.0077329, 0.00202151]; %same values but from Rolfe's "Ref Tank Calculations" spreadsheet
         %% error terms
         sig45 = [];
@@ -39,7 +38,8 @@ classdef N2O_calibration_gas
             %
             % initialize output since it is not calculated in order
             out = zeros(1,4); 
-            a = obj.a; b = obj.b;
+            a = obj.a; 
+            b = obj.b;
             %Calculate individual ratios based on available information
             % R31 = N-alpha + O17
             % R45 = N-alpha + N-beta + O17
@@ -120,6 +120,18 @@ classdef N2O_calibration_gas
         end
         function out = get.R18(obj)
             out = obj.R_individual(4);
+        end
+        function out = get.rref(obj)
+        %"natural" 31R, 45R, 46R from N2-air & VSMOW
+            out = [0.00403135849644347,... %31R
+                   0.00768560526261075,... %45R
+                   0.00238108414692619];   %46R
+        end
+        function out = get.a(obj)
+            out = 0.00937035;
+        end
+        function out = get.b(obj)
+            out = 0.516;
         end
     end
 end

@@ -4,14 +4,12 @@ load N2O
 load NO
 load energy %varying energy data for 4 samples
 load praxair
-
 runN2O = 1;
 runNO = 0;
 runEng = 0;
 
 names = fields(N2O);
 n = numel(names);
-
 %% N2O Data reduction
 % results are a table with the following:
 % Sample name, R15a, R15b, R17, R15b_doubles
@@ -28,45 +26,25 @@ for i = 1:n
     R45_added = r(1) - praxair.R45;
     R46_added = r(2) - praxair.R46;
     sampleR15b = R45_added + praxair.R15b;
-    %% All due to beta
-%     % Assumes that the increase in R46 is purely due to R15b being
-%     % increased. This often leads to a double-enrichment value of R15b that
-%     % is larger than the single-substituted equivalent.
-    R15b_double = R46_added/(praxair.R17 + praxair.R15a) + praxair.R15b;
-    R15a_double = praxair.R15a;
-    R17_double = praxair.R17;
-    %% Doubles are distributed
-%     % Suppose R15b is correct, then calculated the necessary R15a & R17
-%     % in the double substitution to get the right d46 value.
-%     % This invalidates scrambling measuremnets and grossly separating runs.
-%     k = praxair.R17/praxair.R15a;
-%     fun = @(x) r(2)...
-%             - praxair.R18...
-%             - sampleR15b * (1 + k) * x...
-%             - k * x^2;
-%     R15a_double = fzero(fun, [0, 1]);
-%     R15b_double = sampleR15b;
-%     R17_double = k * R15a_double;
-    %% Evenly distrubted
-%     % Assumes that all double-substituted species increased by a factor k.
-%     k = sqrt( (r(2) - praxair.R18) / (praxair.R46 - praxair.R18) )
-%     R15a_double = k * praxair.R15a;
-%     R15b_double = k * praxair.R15b;
-%     R17_double = k * praxair.R17;
+    %% Double Substitutions
+    R15ab = praxair.R15a*praxair.R15b + 10/11*R46_added;
+    R15ao = praxair.R15a*praxair.R17;
+    R15bo = praxair.R15b*praxair.R17 + 1/11*R46_added;
+
     %% Assign results
     N2O_data_table{i,1} = names{i};
     N2O_data_table{i,2} = praxair.R15a;
     N2O_data_table{i,3} = sampleR15b;
     N2O_data_table{i,4} = praxair.R17;
-    N2O_data_table{i,5} = R15a_double;
-    N2O_data_table{i,6} = R15b_double;
-    N2O_data_table{i,7} = R17_double;
+    N2O_data_table{i,5} = R15ab;
+    N2O_data_table{i,6} = R15ao;
+    N2O_data_table{i,7} = R15bo;
     N2O_data.(names{i}) = [praxair.R15a,...
                         sampleR15b,...
                         praxair.R17,...
-                        R15a_double,...
-                        R15b_double,...
-                        R17_double];
+                        R15ab,...
+                        R15ao,...
+                        R15bo];
 end
 N2O_data_table = cell2table(N2O_data_table);
 N2O_data_table.Properties.VariableNames = {'Sample_name' , 'R15a', 'R15b' , 'R17' ,...
@@ -95,8 +73,8 @@ end
 NO_data_table = array2table(NO_data_matrix);
 NO_data_table.Properties.VariableNames = {'Sample_name' , 'Intensity_mV', 'rr31'};
 NO_data_table.Sample_name = {names{[NO_data_table.Sample_name]}}.';
-save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\NO_data.mat','NO_data')
-save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\NO_data_table.mat','NO_data_table')
+% save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\NO_data.mat','NO_data')
+% save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\NO_data_table.mat','NO_data_table')
 end
 
 %% Energy NO Data Reduction
