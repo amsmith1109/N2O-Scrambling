@@ -3,7 +3,6 @@ close all;
 load praxair
 load NO_data
 load N2O_data
-
 names = fields(N2O_data);
 for i = 1:numel(names)
     R = N2O_data.(names{i});
@@ -13,6 +12,8 @@ end
 [~,idx] = sort(betas);
 names = {names{idx}};
 c = max(k); clear k
+
+xx = []; yy = [];
 for i = 1:numel(names)
     R = N2O_data.(names{i});
     dbl = R(4:6);
@@ -30,4 +31,27 @@ for i = 1:numel(names)
     color = [(k-1)/(c-1), 0, 1 - k/c];
     plot(Intensity, s, 'o', 'color', color)
     hold on
+    xx = [xx; Intensity];
+    yy = [yy; s];
 end
+[fitresult, gof, p, limits] = scrambleTrend(xx, yy);
+plot(fitresult)
+txt = ['$s = \frac{a\cdot I + b}',...
+    '{1 + c(a\cdot I + b)}\\',...
+    ', r^2 = ',num2str(gof.rsquare),'$'];
+ylim([.99*min(yy), 1.01*max(yy)])
+xlim([.8*min(xx), 1.01*max(xx)])
+xlabel('30 m/z Intensity (mV)')
+ylabel('Scrambling Coefficient')
+print_settings
+ax = gca;
+ax.XTick = [250,2500,4500];
+ax.YTick = [.082, .087];
+ax.Children(1).LineWidth = 1.5;
+ax.Children(1).Color = [0, 0, 0];
+ax.Legend.Location = 'southeast';
+p = predint(fitresult, sort(xx), .95, 'observation', 'on');
+plot(sort(xx), p, 'r-')
+lgd = legend([ax.Children(3)], txt);
+lgd.Interpreter = 'latex';
+lgd.FontSize = 12;

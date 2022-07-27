@@ -52,8 +52,10 @@ N2O_data_table.Properties.VariableNames = {'Sample_name' , 'R15a', 'R15b' , 'R17
 [~,idx] = sort(N2O_data_table.R15b);
 N2O_data_table = N2O_data_table(idx,:);
 names = {names{idx}};
-save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data_table.mat','N2O_data_table')
-save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data.mat','N2O_data')
+save('E:\My Documents\School\github\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data_table.mat','N2O_data_table')
+save('E:\My Documents\School\github\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data.mat','N2O_data')
+% save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data_table.mat','N2O_data_table')
+% save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data.mat','N2O_data')
 end
 
 %% NO Data Reduction

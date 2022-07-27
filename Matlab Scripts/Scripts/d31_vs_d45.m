@@ -89,8 +89,8 @@ R45 = praxair.rref(2);
 R15a = praxair.R15a;
 R15b = praxair.R15b;
 R17 = praxair.R17;
-d31_m = data.max_delta(:,2);
-d45_m = data.max_delta(:,1);
+d31_m = data.min_delta(:,2);
+d45_m = data.min_delta(:,1);
 % Note that the d45 in the denominator has to be divided by 1000 to get rid
 % of the permil units for determining beta-added. The units remain in the
 % d45 in the numerator so that both sides have the same units.

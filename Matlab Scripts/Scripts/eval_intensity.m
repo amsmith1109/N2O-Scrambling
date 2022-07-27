@@ -75,15 +75,15 @@ for i = 1:numel(names)
             sample.(names{i}).R_ind,...
             refR,...
             sample.(names{i}).r31(j),...
-            sample.(names{i}).doubles);
+            1);
         sample.(names{i}).s(j) = s;
     end
     color = [(i-1)/10,0,(11-i)/10];
-    [x,idx] = sort(sample.(names{i}).intensity);
+    [x, idx] = sort(sample.(names{i}).intensity);
     y = sample.(names{i}).s(idx);
-    xx = [xx,x];
-    yy = [yy,y];
-    plot(x,y,'o','Color',color)
+    xx = [xx, x];
+    yy = [yy, y];
+    plot(x, y, 'o', 'Color', color)
     hold on;
 end
 

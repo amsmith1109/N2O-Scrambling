@@ -13,9 +13,15 @@ function out = measureScrambling(sa, ref, rr31, doubles)
         doubles = [0, 0, 0];
         ref_dbl = [0, 0, 0];
     else
-        ref_dbl = [ref(1)*ref(2),... 
-           ref(1)*ref(2),...
-           ref(2)*ref(3)];
+        % doubles can be 0,1 indicating to use the other inputs, if it is a
+        % 1x3, it will use them for the doubles calculation.
+        if doubles == 1
+            doubles = calcDouble(sa);
+        elseif doubles == 0
+            doubles = calcDoubles(ref);
+        end
+        % calculate the corresponding doubles for the reference.
+        ref_dbl = calcDouble(ref);
     end
     n = numel(rr31);
     %
@@ -64,3 +70,13 @@ function out = measureScrambling(sa, ref, rr31, doubles)
 %     out(2) = fzero(erf2, [0,.5]);
     out = out.';
 end
+
+    % calcDoubles determines the double-substituted ratios from the
+    % singles.
+    % R(1) = alpha*beta, R(2) = alpha*17O, R(3) = beta*17O    
+    function out = calcDouble(in)
+        out = [in(1)*in(2),...
+               in(1)*in(3),...
+               in(2)*in(3)];
+    end
+        
