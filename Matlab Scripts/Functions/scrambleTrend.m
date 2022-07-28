@@ -18,14 +18,14 @@ function [fitresult, gof, p, limits] = scrambleTrend(x, y)
 
 [xData, yData] = prepareCurveData(x, y);
 
-ft = fittype( '(a*x-b)/(1+c*(a*x-b))', 'independent', 'x', 'dependent', 'y' );
+ft = fittype( '(a*x+b)/(1+c*(a*x+b))', 'independent', 'x', 'dependent', 'y' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
 opts.DiffMaxChange = 1;
 opts.Display = 'Off';
 opts.MaxFunEvals = 1000;
-opts.Upper = [inf, 0, inf];
-opts.Lower = [0, -inf, 0];
+opts.Upper = [inf, inf, inf];
+opts.Lower = [0, 0, 0];
 opts.MaxIter = 1000;
 opts.Robust = 'LAR';
 opts.StartPoint = [0.1 0 100];

@@ -53,12 +53,11 @@ for i = range
     r = s{i} - feval(ft,I{i});
     sig = std(r);
     idx = find(abs(r)<(2*sig));
-    numel(idx) - numel(s{i})
     s{i} = s{i}(idx);
     I{i} = I{i}(idx);
-    
     [fit{i}, gof{i}, p(i), lim{i}] = scrambleTrend(I{i}, s{i});
-    
+
+
     errorbar(newI{i}, newS{i},...
         -sigy{i},sigy{i},...
         -sigx{i},sigx{i},...
@@ -85,6 +84,27 @@ ax.XTick = [400, 1000, 1600];
 ax.YTick = [0.083, 0.086, 0.089];
 ylabel('Scrambling Coefficient')
 xlabel('30 AMU Intensity (mV)')
-eV = {'70 eV (*)', '90 eV (?)', '110 eV (o)', '124 eV (?)'};
+eV = fliplr({'70 eV (*)',...
+            ['90 eV (',char(9651),')'],...
+            '110 eV (o)',...
+            ['124 eV (',char(9661),')']});
 legend([ax.Children(1:2:end)], eV, 'Location', 'SouthEast')
 print_settings
+
+for i = 1:4
+tbl{1,i} = fit{i}.a;
+if fit{i}.b < 1e-3
+    tbl{2,i} = 0;
+else
+    tbl{2,i} = fit{i}.b;
+end
+tbl{3,i} = fit{i}.c;
+tbl{4,i} = p(i);
+tbl{5,i} = feval(fit{i},500);
+if lim{i}(1) < 0.07
+    tbl{6,i} = feval(fit{i},50);
+else
+    tbl{6,i} = lim{i}(1);
+end
+tbl{7,i} = lim{i}(1,2);
+end

@@ -4,6 +4,7 @@ load praxair
 load NO_data
 load N2O_data
 names = fields(N2O_data);
+praxair.delta46 = praxair.delta46 - 1;
 for i = 1:numel(names)
     R = N2O_data.(names{i});
     k(i) = R(2)/R(1);
@@ -34,7 +35,7 @@ for i = 1:numel(names)
     xx = [xx; Intensity];
     yy = [yy; s];
 end
-[fitresult, gof, p, limits] = scrambleTrend(xx, yy);
+[fitresult, gof, pval, limits] = scrambleTrend(xx, yy);
 plot(fitresult)
 txt = ['$s = \frac{a\cdot I + b}',...
     '{1 + c(a\cdot I + b)}\\',...
