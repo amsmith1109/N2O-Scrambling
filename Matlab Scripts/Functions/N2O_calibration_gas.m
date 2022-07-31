@@ -21,6 +21,7 @@ classdef N2O_calibration_gas
         b
         rref
         R_individual
+        permil = char(8240);
 %         rref = [0.0040564, 0.0077329, 0.00202151]; %same values but from Rolfe's "Ref Tank Calculations" spreadsheet
         %% error terms
         sig45 = [];

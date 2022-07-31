@@ -60,20 +60,22 @@ xlim([0, 1100])
 % text(x,mean(y),'\fontsize{10}\}')
 text(x + 10, mean(y) + 1, '\} 8‰');
 text(minimum(1) + 30 , minimum(2) - 5, 'No enrichment');
-xlabel('\delta^{45} (‰)');
+permil = char(8240);
+xlabel(['\delta^{45} (',permil,')']);
 ax = gca;
-ylabel('\delta^{31} (‰)');
+ylabel(['\delta^{31} (',permil,')']);
 
-ft = polyfit(data.max_delta(1:2,1), data.max_delta(1:2,2), 1);
-ft2 = polyfit(data.min_delta(1:2,1), data.min_delta(1:2,2), 1);
+ft = polyfit(data.max_delta(:,1), data.max_delta(:,2), 1);
+ft2 = polyfit(data.min_delta(:,1), data.min_delta(:,2), 1);
 
-xx = [0, 1e3];
+xx = [0, 1020];
 yy = polyval(ft, xx);
 yy2 = polyval(ft2, xx);
 plot(xx, yy, 'r--')
 plot(xx, yy2, 'b-.')
+triangle = char(9651);
 legend([ax.Children(1:2)],...
-    '(\Delta) 250 mV' ,...
+    ['(',triangle,') 250 mV'],...
     '(o) 4,000 mV' ,...
     'Location', 'SouthEast');
 print_settings;
@@ -94,6 +96,13 @@ d45_m = data.min_delta(:,1);
 % Note that the d45 in the denominator has to be divided by 1000 to get rid
 % of the permil units for determining beta-added. The units remain in the
 % d45 in the numerator so that both sides have the same units.
-d31_p = @(d45, s) R45/R31 * d45 * (s + R17 + R15a) ./ (1 + s*R15a + (1-s)*(R15b + R45*d45/1000));
+d31_p = @(d45, s) R45/R31 * d45...
+    * (s + R17 + R15a)...
+    ./ (1 + s*R15a + (1-s)*(R15b + R45*d45/1000));
 fun = @(s) sum((d31_p(d45_m,s) - d31_m).^2);
-fminsearch(fun,.08)
+s_min = fminsearch(fun,.08)
+
+d31_m = data.max_delta(:,2);
+d45_m = data.max_delta(:,1);
+fun = @(s) sum((d31_p(d45_m,s) - d31_m).^2);
+s_max = fminsearch(fun,.08)

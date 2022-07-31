@@ -80,7 +80,7 @@ for i = 1:numel(names)
     file = [fname,' - ',names{i}];
 end
 % variable han is used to place a single y axis label for the delta 31/45 plots
-
+legend('\delta^{31}', '\delta^{45}')
 han = axes(fig, 'visible', 'off');
 han.Title.Visible = 'on';
 han.XLabel.Visible = 'on';
@@ -90,10 +90,10 @@ q = han.XLabel.Position;
 han.XLabel.Position(2) = q(2) * 1.025;
 yyaxis(han,'left')
 p = han.YLabel.Position;
-ylabel('\delta^{31} ()')
+ylabel(['\delta^{31} (', praxair.permil, ')'])
 han.YLabel.Position(1) = p(1) * 1.625;
 yyaxis(han, 'right')
-ylabel('\delta^{45} ()');
+ylabel(['\delta^{45} (', praxair.permil, ')']);
 han.YLabel.Visible = 'on';
 
 %% Each set has identical data analysis. This consolidates the code.

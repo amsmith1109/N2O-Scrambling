@@ -55,8 +55,8 @@ function out = measureScrambling(sa, ref, rr31, doubles)
     % double substitution correction.
     for i = 1:n
         errorFunction = @(s) ...
-            (I31(sa, s) + I31doubles(doubles, s))./I30(sa, s).*... %31r sample
-            I30(ref, s)./(I31(ref, s) + I31doubles(ref_dbl, s))... %31r reference
+            (I31(sa, s) + I31doubles(doubles, s))./(I30(sa, s) + doubles(1)*.9).*... %31r sample
+            (I30(ref, s) + ref_dbl(1)*.9)./(I31(ref, s) + I31doubles(ref_dbl, s))... %31r reference
             - rr31(i); %measured 31r_sa/31r_ref
         out(i) = fzero(errorFunction, [0,1]);
     end

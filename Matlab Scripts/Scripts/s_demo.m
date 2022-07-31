@@ -3,9 +3,6 @@
 % This script was used to demo the shortcoming of determining s from
 % comparing the isotopic ratios 31R and 45R. The result is not linear and
 % should not be used for determining s.
-%
-% Please note that Kaiser et al 2004 compare delta-31 vs delta-45/6. These
-% plots are linear.
 
 clear all; close all; clc;
 load praxair
