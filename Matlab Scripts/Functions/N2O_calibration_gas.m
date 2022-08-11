@@ -51,7 +51,11 @@ classdef N2O_calibration_gas
             O18 = @(x) ((1/a)*x)^(1/b); %O18 will depends on determination of O17
             % O17_root is R46(O17) - R46[known]. The root find is a simple
             % way to calculate it with the tricky non-linearity
-            O17_root = @(x) obj.R46 -((alpha(x) + beta)*x + alpha(x)*beta + O18(x));
+            O17_root = @(x) obj.R46...
+                        -alpha(x)*x...
+                        -beta*x...
+                        -alpha(x)*beta...
+                        -O18(x);
             O17 = fzero(O17_root,[0,1]);
             % Assign outputs
             out(1) = alpha(O17);
@@ -124,9 +128,9 @@ classdef N2O_calibration_gas
         end
         function out = get.rref(obj)
         %"natural" 31R, 45R, 46R from N2-air & VSMOW
-            out = [0.00403135849644347,... %31R
-                   0.00768560526261075,... %45R
-                   0.00238108414692619];   %46R
+            out = [0.0040564,... %31R
+                   0.0077329,... %45R
+                   0.002021510056950];   %46R
         end
         function out = get.a(obj)
             out = 0.00937035;
