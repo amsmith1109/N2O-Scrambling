@@ -26,6 +26,7 @@ for i = 1:n
 end
 
 %% NO Data Reduction
+R31 = [];
 for i = 1:n
     R = [];
     I = [];

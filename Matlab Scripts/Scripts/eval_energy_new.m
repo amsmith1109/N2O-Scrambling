@@ -1,13 +1,13 @@
 % Set up workspace
 clear all; clc; close all;
-load NO_energy_data.mat
+load all_NO_energy.mat
 load N2O_data.mat
 load praxair
 
 names = fields(NO_energy_data);
-order = [2,3,1,4];
-names = {names{order}};
-range = 1:4;
+%order = [2,3,1,4];
+%names = {names{order}};
+range = 1:numel(names);
 
 for i = range
     set = NO_energy_data.(names{i});
@@ -42,13 +42,14 @@ for i = range
     end
 end
 
-k = -1;
-markers = {'*','v','o','^'};
-lines = {':','--','-.','-'};
+% k = -1;
+% markers = {'*','v','o','^'};
+% lines = {':','--','-.','-'};
+txt = {'70eV','80eV','90eV','100eV','110eV','120eV','124eV'};
 for i = range
-    k = k+1;
-    color = [k/4, 0, (4-k)/4];
-    clr{i} = color;
+%     k = k+1;
+%     color = [k/4, 0, (4-k)/4];
+%     clr{i} = color;
     ft = scrambleTrend(I{i}, s{i});
     r = s{i} - feval(ft,I{i});
     sig = std(r);
@@ -56,24 +57,37 @@ for i = range
     s{i} = s{i}(idx);
     I{i} = I{i}(idx);
     [fit{i}, gof{i}, p(i), lim{i}] = scrambleTrend(I{i}, s{i});
-
-
+    figure
     errorbar(newI{i}, newS{i},...
         -sigy{i},sigy{i},...
-        -sigx{i},sigx{i},...
-        markers{i},...
-        'color', color);
+        -sigx{i},sigx{i},'o')
+%     errorbar(newI{i}, newS{i},...
+%         -sigy{i},sigy{i},...
+%         -sigx{i},sigx{i},...
+%         markers{i},...
+%         'color', color);
 %     plot(I{i}, s{i},...
 %         markers{i},...
 %         'color', color);
     hold on;
     xx = linspace(0, max(I{i})*1.1);
     yy = feval(fit{i},xx);
-    plot(xx, yy,...
-        lines{i},...
-        'color',color);
-    fit{i};
+    plot(xx, yy)
+    title(txt{i})
+%     plot(xx, yy,...
+%         lines{i},...
+%         'color',color);
+%     fit{i};
+xlim([400,1600])
+xlabel('[mV]')
+ylabel('[s]')
+folder = 'C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Figures\eV\';
+fname = [folder, txt{i},'.png'];
+saveas(gcf, fname)
+close;
 end
+
+if 0
 markers = {'*', 'v', 'o', '^'};
 
 %% Modify display of the plot
@@ -90,8 +104,10 @@ eV = fliplr({'70 eV (*)',...
             ['124 eV (',char(9661),')']});
 legend([ax.Children(1:2:end)], eV, 'Location', 'SouthEast')
 print_settings
+end
 
-for i = 1:4
+
+for i = range
 tbl{1,i} = fit{i}.a;
 if fit{i}.b < 1e-3
     tbl{2,i} = 0;
@@ -108,3 +124,9 @@ else
 end
 tbl{7,i} = lim{i}(1,2);
 end
+row_names = {'a coefficient', 'b coefficient', 'c coefficient',... 
+             'Trend p-value', 's at 500 mV', 'Lower limit of s',...
+             'Upper limit of s'};
+tbl = cell2table(tbl);
+tbl.Properties.VariableNames = names.';
+tbl.Properties.RowNames = row_names

@@ -2,11 +2,11 @@
 clear all; clc; close all;
 load N2O
 load NO
-load energy %varying energy data for 4 samples
+load all_energy %varying energy data for 4 samples
 load praxair
-runN2O = 1;
+runN2O = 0;
 runNO = 0;
-runEng = 0;
+runEng = 1;
 
 names = fields(N2O);
 n = numel(names);
@@ -84,7 +84,7 @@ end
 %% Energy NO Data Reduction
 if runEng
 experiments = fields(energy);
-for i = 1:4
+for i = 1:numel(experiments)
     set = energy.(experiments{i});
 	names = fields(set);
     data = [];
