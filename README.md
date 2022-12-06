@@ -32,9 +32,13 @@ This code uses defined objects as wrappers for data. This ensures consistency in
 ### N2O_Calibration_Gas
 
 Creating the object for the reference gas(es) should be done carefully by manually entering the known contents of the reference gas. Simply enter the line:
+
 ``` ref_name = N2O_Calibration_Gas```
+
 ```ref_name.delta31 = delta_31_value```
+
 ```ref_name.delta45 = delta_45_value```
+
 ```ref_name.delta46 = delta_46_value```
 
 ### IsoData
@@ -52,12 +56,13 @@ The user will need to export data from their IRMS and save it in a format that i
 | 10          | 998         | 952         | 2240        | 998      | 544      | 2301     |
 
 First read in the data and separate the reference and sample measurements. You should have something like:
-```Sample = ```
-```| Sample 1 | Sample 2 | Sample 3 |```
-```| :----:   | :----:   | :----:   |```
-```| 1003     | 550      | 2302     |```
-```| 1002     | 545      | 2298     |```
-```| ...      | ...      | ...      |```
-```| 998      | 544      | 2301     |```
+
+Sample = 
+| Sample 1 | Sample 2 | Sample 3 |
+| :----:   | :----:   | :----:   |
+| 1003     | 550      | 2302     |
+| 1002     | 545      | 2298     |
+| ...      | ...      | ...      |
+| 998      | 544      | 2301     |
 
 
