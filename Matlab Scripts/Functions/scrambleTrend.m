@@ -1,19 +1,34 @@
-% Performs a trend analysis based on the S-curve described in the paper.
+% scrambleTrend - Performs an s-curve best fit on the input data.
+%
+% Description:
+%   This function calculates an s-curve best fit line on the input x and y
+%   data. It is used to determine how scrambling varies with a given input
+%   parameter (i.e., signal intensity). This function uses the aggregate of 
+%   Scrambling values determined from raw calibration measurements that 
+%   were analyzed with the measureScrambling function.
+%
+% Example: 
+%    [fitresult, gof, p, limits] = scrambleTrend(intensity, scrambling)
+%    [~, ~, ~, limits] = scrambleTrend(intensity, scrambling)
 %
 % Requirements:
-% Curve Fitting Toolbox
+%   Curve Fitting Toolbox
 %
 % Inputs:
-% x = intensity
-% y = scrambling coefficient
+%   x = intensity (or other variable of interest), an n-length array
+%   y = scrambling coefficient, an n-length array
 %
 % Outputs:
-% fitresult = cfit object that has the fit parameters. It can be used to
-% calculate the uncertainty bounds of fit results.
-% gof = goodness of fit. Used to return statistical data
-% p = p-value for persistance of a trend. Null hypothesis is the first
-% coefficient is < 0.
-% limits = lower and upper limite of scrambling coefficient. 
+%   fitresult = cfit object that has the fit parameters. It can be used to
+%       calculate the uncertainty bounds of fit results.
+%   gof = goodness of fit. Used to return statistical data
+%   p = p-value for persistance of a trend. Null hypothesis is the first
+%       coefficient is < 0.
+%   limits = lower and upper limite of scrambling coefficient.
+%
+% Author: Alex Smith
+% email address: amsmith1109@gmail.com
+% Created: July 2022; Last revision: 05-Dec-2022
 function [fitresult, gof, p, limits] = scrambleTrend(x, y)
 
 [xData, yData] = prepareCurveData(x, y);
