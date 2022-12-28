@@ -41,7 +41,7 @@ Creating the object for the reference gas(es) should be done carefully by manual
 
 ```ref_name.delta46 = delta_46_value```
 
-It is assumed that the full isotopic description of the reference gas is known and can be derived from these three parameters, and the mass dependent fractionation of oxygen. The value for $\delta<sup>31</sup> assumes an unscrambled ratio for <sup>31</sup>R = <sup>15</sup>R<sub>$\alpha</sub> + <sup>17</sup>R. This object variable needs to be saved as a *.m file within the working directory of your project. The saved file will later be accessed by the related ```IsoData``` variable.
+It is assumed that the full isotopic description of the reference gas is known and can be derived from these three parameters, and the mass dependent fractionation of oxygen. The value for $\delta$<sup>31</sup> assumes an unscrambled ratio for <sup>31</sup>R = <sup>15</sup>R<sup>$\alpha$</sup> + <sup>17</sup>R. This object variable needs to be saved as a .m file within the working directory of your project. The saved file will later be accessed by the related ```IsoData``` variable.
 
 ### IsoData
 
@@ -85,24 +85,30 @@ Suppose these measurements correspond to the m/z 44, 45 and 46 measurements of a
 ```measurement = IsoData(Sample, Reference, 'Nov11-2022', [44, 45, 46])```
 
 An alternative method is to save the relevant information into a ```struct``` variable. This requires a very specific naming structure to work properly.
-```samp.sample = Sample```
+```samp.sample = Sample;```
+
 ```samp.reference = Reference;```
+
 ```sampe.refID = 'Nov11-2022';```
+
 ```samp.AMU = [44, 45, 46];```
 
 ```IsoData``` is then initialized with:
 
-```measurement = IsoData(samp)```
+```measurement = IsoData(samp);```
 
 ## IsoData Functions
 Each function takes an index argument and returns the measured value and the measurement uncertainty. The index is typically either 1 or 2. For m/z [44, 45, 46], 1 yields the 45 value and 2 yields the 46 value. For m/z [30, 31, 32], 1 yields the 31 value, and 2 defaults to return a 0. r: calculates the intensity ratio based on the index called. R: calculates the isotopic ratio based on the intensity ratio r, and the known isotopic composition of the reference gas. delta: calculates the isotopic compositions deviation from the accepted international standard. Depends on R and hidden properties in the reference gas. These are called in either a functional form, or as a structure call:
 
 Functional form:
-```r(measurement, 1)```
-```R(measurement, 1)```
+```r(measurement, 1)```<br />
+```R(measurement, 1)```<br />
 ```delta(measurement, 1)```
 
 Structure form:
 ```measurement.r(1)```
+
 ```measurement.R(1)```
+
 ```measurement.delta(1)```
+
