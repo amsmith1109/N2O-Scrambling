@@ -29,8 +29,8 @@
 %% Code:
 classdef IsoData
     properties
-        sample(10,3) double {mustBeReal, mustBeFinite}
-        reference(11,3) double {mustBeReal, mustBeFinite}
+        sample double {mustBeReal, mustBeFinite}
+        reference double {mustBeReal, mustBeFinite}
         refID = 'praxair';
         AMU(3,1) int32 {mustBeReal, mustBeFinite}
     end
@@ -55,6 +55,17 @@ classdef IsoData
                 obj.refID = ID;
                 obj.AMU = AMU;
             end
+            if size(obj.sample, 1) ~= size(obj.reference, 1) - 1
+                error('There must be one more reference measurements than sample measurements.')
+            end
+            try
+                load(obj.refID);
+            catch
+                error(['Reference ID "',...
+                    obj.refID,...
+                    '" does not exist. Please create it',...
+                    'before initializing IsoData variable.'])
+            end
         end
         
         % r() calculates the intensity ratios. 
@@ -63,10 +74,10 @@ classdef IsoData
             if nargin==1
                 idx = 1;
             end
-            I_sa = obj.sample(:,idx+1)./obj.sample(:,1);
+            I_sa = obj.sample(:,idx+1) ./ obj.sample(:,1);
             I_ref = refR(obj, idx);
-            out = mean(I_sa./I_ref); %measurement
-            error = std(I_sa./I_ref)/sqrt(numel(I_sa)); %standard error
+            out = mean(I_sa ./ I_ref); %measurement
+            error = std(I_sa ./ I_ref) / sqrt(numel(I_sa)); %standard error
         end
         
         function [out, error] = refr(obj, idx)
@@ -81,8 +92,8 @@ classdef IsoData
         function [out, error] = R(obj, idx)
             ref = obj.rref;
             [r, error] = obj.r(idx);
-            out = r*ref(idx+1);
-            error = error*ref(idx+1);
+            out = r * ref(idx + 1);
+            error = error * ref(idx + 1);
         end
         
         % rref() returns the isotopologue ratio of the reference gas.
@@ -117,7 +128,7 @@ classdef IsoData
             end
             r_ref = ref.rref(id);
             r_sa = obj.R(idx);
-            out(1) = (r_sa(1)/r_ref - 1)*1000;
+            out(1) = (r_sa(1) / r_ref - 1) * 1000;
             %out(2) = abs(1000/r_ref)*r_sa(2);
         end
         
@@ -133,7 +144,7 @@ end
 % how the reference would've been measured at the time the sample
 % was measured.
 function out = refR(obj,idx)
-    top = conv(obj.reference(:,idx+1),[.5 .5], 'valid');
-    bottom = conv(obj.reference(:,1),[.5 .5], 'valid');
-    out = top./bottom;
+    top = conv(obj.reference(:,idx+1), [.5 .5], 'valid');
+    bottom = conv(obj.reference(:,1), [.5 .5], 'valid');
+    out = top ./ bottom;
 end
