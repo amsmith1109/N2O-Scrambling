@@ -18,9 +18,6 @@ xx = []; yy = [];
 for i = 1:numel(names)
     R = N2O_data.(names{i});
     dbl = R(4:6);
-%     dbl = [R(1)*R(2),...
-%            R(1)*R(3),...
-%            R(2)*R(3)]
     k = R(2)/R(1);
     doubles = R(4:6);
     Intensity = NO_data.(names{i})(:, 1);
@@ -37,13 +34,14 @@ for i = 1:numel(names)
 end
 [fitresult, gof, pval, limits] = scrambleTrend(xx, yy);
 plot(fitresult)
-txt = ['$s = \frac{a\cdot I + b}',...
-    '{1 + c(a\cdot I + b)}\\',...
+txt = ['$s = \frac{a\cdot U_{30} + b}',...
+    '{1 + c(a\cdot U_{30} + b)}\\',...
     ', r^2 = ',num2str(gof.rsquare),'$'];
 ylim([.99*min(yy), 1.01*max(yy)])
 xlim([.8*min(xx), 1.01*max(xx)])
 xlabel('30 m/z Intensity (mV)')
 ylabel('Scrambling Coefficient')
+fullscreen = 1;
 print_settings
 ax = gca;
 ax.XTick = [250,2500,4500];
@@ -56,3 +54,7 @@ plot(sort(xx), p, 'r-')
 lgd = legend([ax.Children(3)], txt);
 lgd.Interpreter = 'latex';
 lgd.FontSize = 12;
+fitresult
+feval(fitresult, 0)
+feval(fitresult, 500)
+1/fitresult.c
