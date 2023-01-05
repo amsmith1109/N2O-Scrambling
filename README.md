@@ -41,7 +41,7 @@ It is assumed that the full isotopic description of the reference gas is known a
 
 ### IsoData
 
-The purpose of the IsoData object is to have a wrapper around raw IRMS measurements. Initializing an IsoData variable stores the raw measurements and provides the functions for calculating intensity ratios r, isotopic ratios R, and the isotopic deviation values $\delta$. An example script showing how ```IsoData``` is used can be found under [/Matlab/Examples/IsoData_Example.m](/Matlab/Examples/IsoData_Example.m).
+The purpose of the IsoData object is to have a wrapper around raw IRMS measurements. Initializing an IsoData variable stores the raw measurements and provides the functions for calculating intensity ratios r, isotopic ratios R, and the isotopic deviation values $\delta$. An example script showing how ```IsoData``` is used can be found under [/Matlab Scripts/Examples/IsoData_Example.m](/Matlab Scripts/Examples/IsoData_Example.m).
 
 ## Initializing IsoData variable
 Raw data from an IRMS is generally a table with two sets of columns for each faraday cup measurements; one set for reference gas and another for the sample. The reported values are a measure intensity. Continuous-flow measurments are reported as integrated voltage signals (e.g., mV-s) and dual-inlet measurements are reported as an average voltage (e.g., mV). A reference gas is measured before and after the sample gas. The two measurements are averaged to give a drift corrected measurement to compare against the sample gas measurement. This software uses the raw measurements to determine the scrambling coefficient. 
