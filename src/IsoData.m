@@ -131,8 +131,7 @@ classdef IsoData
             out(1) = (r_sa(1) / r_ref - 1) * 1000;
             %out(2) = abs(1000/r_ref)*r_sa(2);
         end
-        
-
+       
     end
 end
 %% Functions shared with the object definition

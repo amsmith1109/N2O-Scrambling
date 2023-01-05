@@ -1,14 +1,74 @@
+% measureScrambling - determine scrambling coefficient from measurements
+%
+%% Description:
+%   Function that computes the scrambling coefficient from a given set of
+%   measurements. This uses the root-finding method to determine the
+%   scrambling coefficient that explains the measured values for known
+%   isotopic ratios of the sample and reference gas. Additional inputs are
+%   available for double substituted species. This was added as it was
+%   found the the definitions of individual isotopic ratios do not always
+%   agree when considering double substitutions.
+%
+%   The doubles substitution correction can be used in different ways. If 
+%   no correction is provided for the double substituted species are
+%   assumed to be zero. Using a simple "true" input will cause the double
+%   substituted species to be calculated from the individual isotopic 
+%   ratios (i.e., N15_alpha, N15_beta, O17 and O18).
+%
+%   This function can return a vector output if a matrix of measurement
+%   values are given. However, it is restricted to a single gas as it
+%   expects a single line that describes that known ratios of the sample
+%   and reference gas.
+%
+%% Example:
+%   Single input, no doubles correction:
+%    measureScrambling([0.0037    0.0041    0.0004    0.0021],...
+%                      [0.0037    0.0037    0.0004    0.0021],...
+%                      1.0089)
+%       = 0.95
+%
+%   Multiple inputs, no doubles correction:
+%    measureScrambling([0.0037    0.0041    0.0004    0.0021],...
+%                      [0.0037    0.0037    0.0004    0.0021],...
+%                      [1.00894, 1.00892, 1.00891])
+%       = [0.0953, 0.0951, 0.0950]
+%
+%   Single input, doubles correction:
+%    measureScrambling([0.0037    0.0041    0.0004    0.0021],...
+%                      [0.0037    0.0037    0.0004    0.0021],...
+%                      1.0089,...
+%                      1e-4*[0.1541    0.0143    0.0161])
+%       = 0.908
+%
+%   Single input, doubles assumed normal:
+%    measureScrambling([0.0037    0.0041    0.0004    0.0021],...
+%                      [0.0037    0.0037    0.0004    0.0021],...
+%                      1.0089,	1)
+%       = 0.913
+%
+% Requirements:
+%   None
+%
+% Inputs:
+%   sa = [N15_alpha, N15_beta, O17, O18] of sample gas
+%   ref = [N15_alpha, N15_beta, O17, O18] of reference gas
+%   rr31 = IRMS measured ratio ([U31/U30]_sa / [U31/U30]_ref)
+%   doubles = [N15_alpha x N15_beta,...
+%              N15_alpha x O17,...
+%              N15_beta x O17]
+%       doubles is for the double substituted isotopomers that give a 46R
+%       signal. 
+%
+% Outputs:
+%   out = scrambling coefficients that explains measurement for the
+%       measured signal intensity ratio(s).
+%
+%% Authorship
+% Author: Alex Smith
+% email address: amsmith1109@gmail.com
+% Created: July 2022; Last revision: 05-Jan-2022
+%% Function
 function out = measureScrambling(sa, ref, rr31, doubles)
-    %% Input Definitions
-    % sa & ref are the known ratios for the calibration run. These should
-    % be a nx3 matrix, where n is the number of calibration runs.
-    % ref can be a 1x3 vector
-    %
-    % rr31 is the actual measured isotopic ratio on the IRMS. These
-    % are given by the 31r of the sample divided by the 31r of the
-    % reference gas.
-    %
-
     if ~exist('doubles')
         doubles = [0, 0, 0];
         ref_dbl = [0, 0, 0];
