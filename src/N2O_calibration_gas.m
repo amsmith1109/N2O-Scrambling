@@ -30,6 +30,12 @@ classdef N2O_calibration_gas
     end
     %% Methods
     methods
+        function obj = N2O_calibration_gas(d31, d45, d46)
+            obj.delta31 = d31;
+            obj.delta45 = d45;
+            obj.delta46 = d46;
+        end
+        
         % All methods are for calculating the dependent properties. Since a
         % tank has reported values in delta's, this converts them into the
         % absolute ratios based on N2-Air & VSMOW from rref
