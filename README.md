@@ -37,11 +37,11 @@ Creating the object for the reference gas(es) should be done carefully by manual
 ```ref_name.delta45 = delta_45_value```<br />
 ```ref_name.delta46 = delta_46_value```
 
-It is assumed that the full isotopic description of the reference gas is known and can be derived from these three parameters, and the mass dependent fractionation of oxygen. The value for $\delta$<sup>31</sup> assumes an unscrambled ratio for <sup>31</sup>R = <sup>15</sup>R<sup>$\alpha$</sup> + <sup>17</sup>R. This object variable needs to be saved as a .m file within the working directory of your project. The saved file will later be accessed by the related ```IsoData``` variable.
+It is assumed that the full isotopic description of the reference gas is known and can be derived from these three parameters, and the mass dependent fractionation of oxygen. The value for $\delta$<sup>31</sup> assumes an unscrambled ratio for <sup>31</sup>R = <sup>15</sup>R<sup>$\alpha$</sup> + <sup>17</sup>R. This object variable needs to be saved as a .mat file within the working directory of your project. The saved file will later be accessed by the related ```IsoData``` variable.
 
 ### IsoData
 
-The purpose of the IsoData object is to have a wrapper around raw IRMS measurements. Initializing an IsoData variable stores the raw measurements and provides the functions for calculating intensity ratios r, isotopic ratios R, and the isotopic deviation values $\delta.
+The purpose of the IsoData object is to have a wrapper around raw IRMS measurements. Initializing an IsoData variable stores the raw measurements and provides the functions for calculating intensity ratios r, isotopic ratios R, and the isotopic deviation values $\delta$. An example script showing how ```IsoData``` is used can be found under [/Matlab/Examples/IsoData_Example.m](/Matlab/Examples/IsoData_Example.m).
 
 ## Initializing IsoData variable
 Raw data from an IRMS is generally a table with two sets of columns for each faraday cup measurements; one set for reference gas and another for the sample. The reported values are a measure intensity. Continuous-flow measurments are reported as integrated voltage signals (e.g., mV-s) and dual-inlet measurements are reported as an average voltage (e.g., mV). A reference gas is measured before and after the sample gas. The two measurements are averaged to give a drift corrected measurement to compare against the sample gas measurement. This software uses the raw measurements to determine the scrambling coefficient. 
@@ -76,7 +76,7 @@ Reference =
 | ...         | ...         | ...         |
 | 998         | 952         | 2240        |
 
-Suppose these measurements correspond to the m/z 44, 45 and 46 measurements of a sample against a reference gas named "Nov11_2022". 
+Suppose these measurements correspond to the m/z 44, 45 and 46 measurements of a sample against a reference gas named "Nov11_2022".
 
 ```measurement = IsoData(Sample, Reference, 'Nov11-2022', [44, 45, 46])```
 
@@ -90,16 +90,18 @@ An alternative method is to save the relevant information into a ```struct``` va
 
 ```measurement = IsoData(samp);```
 
+Instances of ```IsoData``` objects are checked to ensure that there is always one extra line of reference measurements than sample measurements, and that the associated ```N2O_calibration_gas``` object is saved in your directory. If you get the error "[ref name] does not exist...", double check that the variable is saved as a .mat file, and add it to your working directory. Alternatively, you can use the full file path as the reference name. For exmaple, the refID field would instead be ```'C:\My Documents\Matlab\Reference Gases\Nov11_2022.mat'```. The tradeoff with using the file path is that it will only work on a single machine where the file is stored.
+
 ## IsoData Functions
-Each function takes an index argument and returns the measured value and the measurement uncertainty. The index is typically either 1 or 2. For m/z [44, 45, 46], 1 yields the 45 value and 2 yields the 46 value. For m/z [30, 31, 32], 1 yields the 31 value, and 2 defaults to return a 0. r: calculates the intensity ratio based on the index called. R: calculates the isotopic ratio based on the intensity ratio r, and the known isotopic composition of the reference gas. delta: calculates the isotopic compositions deviation from the accepted international standard. Depends on R and hidden properties in the reference gas. These are called in either a functional form, or as a structure call:
+Each function takes an index argument and returns the measured value and the measurement uncertainty. The index is typically either 1 or 2. For m/z [44, 45, 46], index 1 yields the 45 value and index 2 yields the 46 value. For m/z [30, 31, 32], 1 yields the 31 value, and 2 defaults to return a 0. r: calculates the intensity ratio based on the index called. R: calculates the isotopic ratio based on the intensity ratio r, and the known isotopic composition of the reference gas. delta: calculates the isotopic compositions deviation from the accepted international standard. Depends on R and hidden properties in the reference gas. These are called in either a functional form, or as a structure call:
 
 Functional form:<br />
-```r(measurement, 1)```<br />
-```R(measurement, 1)```<br />
-```delta(measurement, 1)```
+```r(measurement, 1) = <sup>45</sup>r```<br />
+```R(measurement, 2) = <sup>46</sup>R```<br />
+```delta(measurement, 1) = <sup>45</sup>$\delta$```
 
 Structure form:<br />
-```measurement.r(1)```<br />
-```measurement.R(1)```<br />
-```measurement.delta(1)```
+```measurement.r(1) = <sup>45</sup>r```<br />
+```measurement.R(2) = <sup>46</sup>R```<br />
+```measurement.delta(1) = <sup>45</sup>$\delta$```
 
