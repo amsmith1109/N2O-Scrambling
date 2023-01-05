@@ -55,8 +55,16 @@ classdef IsoData
                 obj.refID = ID;
                 obj.AMU = AMU;
             end
-            if size(obj.sample, 1) ~= size(obj.reference, 1) + 1
+            if size(obj.sample, 1) ~= size(obj.reference, 1) - 1
                 error('There must be one more reference measurements than sample measurements.')
+            end
+            try
+                load(obj.refID);
+            catch
+                error(['Reference ID "',...
+                    obj.refID,...
+                    '" does not exist. Please create it ',...
+                    'before initializing IsoData variable.'])
             end
         end
         
@@ -68,8 +76,8 @@ classdef IsoData
             end
             I_sa = obj.sample(:,idx+1) ./ obj.sample(:,1);
             I_ref = refR(obj, idx);
-            out = mean(I_sa. / I_ref); %measurement
-            error = std(I_sa. / I_ref) / sqrt(numel(I_sa)); %standard error
+            out = mean(I_sa ./ I_ref); %measurement
+            error = std(I_sa ./ I_ref) / sqrt(numel(I_sa)); %standard error
         end
         
         function [out, error] = refr(obj, idx)
@@ -138,5 +146,5 @@ end
 function out = refR(obj,idx)
     top = conv(obj.reference(:,idx+1), [.5 .5], 'valid');
     bottom = conv(obj.reference(:,1), [.5 .5], 'valid');
-    out = top. / bottom;
+    out = top ./ bottom;
 end
