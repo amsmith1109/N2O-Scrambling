@@ -37,9 +37,9 @@ This package includes 8 files (6 functions and 2 object).
 - print_settings  
 
 
-Please refer to comments in the source code for detailed descriptions of these functions
+This is not an officially supported package with Matlab, so please download the files from [/src](src) folder and add them to your working directory. Files can be temporarily added by navigating to the folder with the files within Matlab, right-clicking the containing folder and selecting "Add to Path → Selected Folders". 
 
-This is not an officially supports package with Matlab, so please download the files from [/src](src) folder and add them to your working directory. Files can be temporarily added by navigating to the folder with the files within Matlab, right-clicking the containing folder and selecting "Add to Path → Selected Folders". These files can be permanently added by including the path in your settings. Select the "HOME" tab in the ribbon, then in the "ENVIRONMENT" section click on "Set Path". A dialog box opens that shows the folders currently added to Matlab's directory. Select "Add Folder..." or "Add with Subfolders...", and in the opened dialog box navigate to where the files are stored and click "Select Folder". These should not always be available whenever Matlab is started.
+These files can be permanently added by including the path in your settings. Select the "HOME" tab in the ribbon, then in the "ENVIRONMENT" section click on "Set Path". A dialog box opens that shows the folders currently added to Matlab's directory. Select "Add Folder..." or "Add with Subfolders...", and in the opened dialog box navigate to where the files are stored and click "Select Folder". These should not always be available whenever Matlab is started.
 
 ## N2O_Calibration_Gas
 
@@ -133,8 +133,14 @@ This function can return a vector output if a matrix of measurement values are g
 This function calculates an s-curve best fit line on the input x and y data. It is used to determine how scrambling varies with a given input parameter (i.e., signal intensity). This function uses the aggregate of Scrambling values determined from raw calibration measurements that were analyzed with the measureScrambling function.
 
 ## rMeasure
-(placeholder)  
-Calculates individual N and O ratios using the formulation of  R31_measured, R45, and R46 from Kaiser et al 2003 along with the mass-dependent fractionation of oxygen. Fractionation constants are defined at the beginning of the function. Due to the non-linearity of the mass-dependent fractionation, 17R has to be calculated using a root-finding approach. All other ratios are then simple substitutions.
+Calculates <sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R and <sup>18</sup>R using the formulation of  <sup>31</sup>R<sub>measured</sub>, <sup>45</sup>R, <sup>46</sup>R and mass-dependent fractionation of oxygen as defined in Kaiser et al 2003. Due to the non-linearity of the mass-dependent fractionation, <sup>17</sup>R is first calculated using the root-finding function ```fzero```. All other ratios are then calculated by algebraic substitutions. The four defining equations are as follows:
+
+ <sup>17</sup>R =  0.00937035 x (<sup>18</sup>R)<sup>0.516</sup>  
+ <sup>31</sup>R<sub>measured</sub> = s<sup>15</sup>R<sub>$\beta$</sub> + \~{s}<sup>15</sup>R<sub>$\alpha$</sub> + <sup>17</sup>R  
+ <sup>45</sup>R = <sup>15</sup>R<sub>$\beta$</sub> + <sup>17</sup>R + <sup>17</sup>R  
+ <sup>46</sup>R = <sup>15</sup>R<sub>$\alpha$</sub> x <sup>17</sup>R<sub>$\beta$</sub> + <sup>17</sup>R x (<sup>17</sup>R<sub>$\alpha$</sub> + <sup>17</sup>R<sub>$\beta$</sub>) + <sup>18</sup>R
+ 
+ 
 
 ## invRM
 (placeholder)  
