@@ -135,16 +135,44 @@ This function calculates an s-curve best fit line on the input x and y data. It 
 ## rMeasure
 Calculates <sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R and <sup>18</sup>R using the formulation of  <sup>31</sup>R<sub>measured</sub>, <sup>45</sup>R, <sup>46</sup>R and mass-dependent fractionation of oxygen as defined in Kaiser et al 2003. Due to the non-linearity of the mass-dependent fractionation, <sup>17</sup>R is first calculated using the root-finding function ```fzero```. All other ratios are then calculated by algebraic substitutions. The four defining equations are as follows:
 
- <sup>17</sup>R =  0.00937035 x (<sup>18</sup>R)<sup>0.516</sup>  
- <sup>31</sup>R<sub>measured</sub> = s<sup>15</sup>R<sub>$\beta$</sub> + \~{s}<sup>15</sup>R<sub>$\alpha$</sub> + <sup>17</sup>R  
- <sup>45</sup>R = <sup>15</sup>R<sub>$\beta$</sub> + <sup>17</sup>R + <sup>17</sup>R  
- <sup>46</sup>R = <sup>15</sup>R<sub>$\alpha$</sub> x <sup>17</sup>R<sub>$\beta$</sub> + <sup>17</sup>R x (<sup>17</sup>R<sub>$\alpha$</sub> + <sup>17</sup>R<sub>$\beta$</sub>) + <sup>18</sup>R
+<sup>17</sup>R =  0.00937035 x (<sup>18</sup>R)<sup>0.516</sup>  
+
+<sup>31</sup>R<sub>m</sub> = s<sup>15</sup>R<sub>$\beta$</sub> + 
+(1 - s)<sup>15</sup>R<sub>$\alpha$</sub> + 
+<sup>17</sup>R  
+
+<sup>45</sup>R = <sup>15</sup>R<sub>$\alpha$</sub> + <sup>15</sup>R<sub>$\beta$</sub> + <sup>17</sup>R  
+
+<sup>46</sup>R = <sup>15</sup>R<sub>$\alpha$</sub> x <sup>17</sup>R<sub>$\beta$</sub> + 
+<sup>17</sup>R x (<sup>17</sup>R<sub>$\alpha$</sub> + 
+<sup>17</sup>R<sub>$\beta$</sub>) + 
+<sup>18</sup>R
  
- 
+Mass-dependent fractionation of oxygen gives a direct subsitution for <sup>18</sup>R in terms of <sup>17</sup>R. Using <sup>31</sup>R<sub>m</sub> and <sup>45</sup>R, <sup>15</sup>R<sub>$\alpha$</sub> and <sup>15</sup>R<sub>$\beta$</sub> can be solved in terms of the unknown <sup>17</sup>R:
+
+<sup>15</sup>R<sub>$\alpha$</sub>(<sup>17</sup>R, <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R) 
+= (1 - 2s)<sup>-1</sup> x (<sup>31</sup>R - s<sup>45</sup>R - (1-s)<sup>17</sup>R)  
+<sup>15</sup>R<sub>$\beta$</sub>(<sup>17</sup>R, <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R) 
+= (1 - 2s)<sup>-1</sup> x ((1-s)<sup>45</sup>R - <sup>31</sup>R - s<sup>17</sup>R)
+
+This leads to an expression for <sup>46</sup>R that is given in terms of the measured quantities <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R and the unknown <sup>17</sup>R. The quantity for <sup>17</sup>R is then determined by applying the root-finding algorithm to the difference between the measured value of <sup>46</sup>R and the expression for <sup>46</sup>R that depends on <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R and <sup>17</sup>R:
+
+<sup>46</sup>R - <sub>46</sup>R(<sup>17</sup>R, <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R) = 0
+
+With the resulting quantity of <sup>17</sup>R, <sup>18</sup>R, <sup>15</sup>R<sub>$\alpha$</sub>, and <sup>15</sup>R<sub>$\beta$</sub> are calculated. 
 
 ## invRM
-(placeholder)  
-inverses rMeasure
+This function inverses the quantities from ```rMeasure``` using the same formulation:
+
+<sup>17</sup>R =  0.00937035 x (<sup>18</sup>R)<sup>0.516</sup>  
+<sup>31</sup>R<sub>m</sub> = s<sup>15</sup>R<sub>$\beta$</sub> +
+ (1 - s)<sup>15</sup>R<sub>$\alpha$</sub> +
+ <sup>17</sup>R  
+<sup>45</sup>R = <sup>15</sup>R<sub>$\alpha$</sub> + <sup>15</sup>R<sub>$\beta$</sub> + <sup>17</sup>R  
+<sup>46</sup>R = <sup>15</sup>R<sub>$\alpha$</sub> x <sup>17</sup>R<sub>$\beta$</sub> +
+ <sup>17</sup>R x (<sup>17</sup>R<sub>$\alpha$</sub> +
+ <sup>17</sup>R<sub>$\beta$</sub>) +
+ <sup>18</sup>R
 
 
 # Workflow
