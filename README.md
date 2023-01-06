@@ -162,10 +162,10 @@ This leads to an expression for <sup>46</sup>R that is given in terms of the mea
 <sup>18</sup>R, <sup>15</sup>R<sub>$\alpha$</sub>, and <sup>15</sup>R<sub>$\beta$</sub> are then calculated with the now known <sup>17</sup>R.
 
 Use the following syntax to call this equation:  
-```out = rMeasure([<sup>31</sup>R<sub>m</sub>, <sup>45</sup>R, <sup>46</sup>R], s)```  
+out = rMeasure([<sup>31</sup>R<sub>m</sub>, <sup>45</sup>R, <sup>46</sup>R], s)
 
 The output is given as a 1 x 4 vector:  
-```out = [<sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R, <sup>18</sup>R]```
+out = [<sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R, <sup>18</sup>R]
 
 ## invRM
 This function inverses of ```rMeasure``` to give the expected measured values for <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R, and <sup>46</sup>R. These means that ```rMeasure(invRM(input, s), s)``` = ```invRM(rMeasure(input, s), s)``` = ```input```. The output values are taken from the original formulation used for ```rMeasure```:
@@ -181,13 +181,13 @@ This function inverses of ```rMeasure``` to give the expected measured values fo
  <sup>18</sup>R
  
  Use the following syntax to call this equation:  
-```out = invRM([<sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R, <sup>18</sup>R], s)```  
+out = invRM([<sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R, <sup>18</sup>R], s)
 
 The output is given as a 1 x 4 vector:  
-```out = [<sup>31</sup>R<sub>m</sub>, <sup>45</sup>R, <sup>46</sup>R]```
+out = [<sup>31</sup>R<sub>m</sub>, <sup>45</sup>R, <sup>46</sup>R]
 
 A third optional input is available for manually inputting the isotopic ratios of the double-substituted species. This allows for the input:
-```invRM(R, s, [<sup>46</sup>R<sub>$\alpha\beta$</sub>, <sup>46</sup>R<sub>$\beta,17$</sub>, <sup>46</sup>R<sub>$\alpha,17$</sub>])```
+invRM(R, s, [<sup>46</sup>R<sub>$\alpha\beta$</sub>, <sup>46</sup>R<sub>$\beta,17$</sub>, <sup>46</sup>R<sub>$\alpha,17$</sub>])
 
 # Workflow
 The workflow described here only describes the analysis process for determining the scrambling coefficient that is later used to determine isotopomer ratios for an N<sub>2</sub>O sample. Measurement techniques may vary from machine to machine. 
