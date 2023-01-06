@@ -27,9 +27,15 @@
 % Author: Alex Smith
 % email address: amsmith1109@gmail.com
 % Created: July 2022; Last revision: 05-Dec-2022
-function out = rMeasure(R31, R45, R46, s)
+function out = rMeasure(R, s)
+    R31 = R(1);
+    R45 = R(2);
+    R46 = R(3);
     a = 0.00937035;
     b = 0.516;
+    if ~exist('s')
+        s = 0;
+    end
     R18 = @(R17) ((1/a)*R17)^(1/b);
     
     R15a = @(R17) ...

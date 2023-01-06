@@ -27,14 +27,14 @@ ax.XLim = [ax.XTick(1),ax.XTick(end)];
 % ax.YLim = [ax.YTick(1),ax.YTick(end)];
 
 function out = scale(in)
-sig = sigfigs(in)+2;
-out = round(in,sig,'significant');
-out = [out(1),mean(out),out(end)];
+    sig = sigfigs(in)+2;
+    out = round(in,sig,'significant');
+    out = [out(1),mean(out),out(end)];
 end
 
 function out = sigfigs(in)
-top = floor(log(abs(max(in)))/log(10));
-df = diff([min(in),max(in)]);
-bottom = floor(log(df)/log(10));
-out = top - bottom + 1;
+    top = floor(log(abs(max(in)))/log(10));
+    df = diff([min(in),max(in)]);
+    bottom = floor(log(df)/log(10));
+    out = top - bottom + 1;
 end
