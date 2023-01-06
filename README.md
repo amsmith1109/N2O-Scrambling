@@ -157,12 +157,18 @@ Mass-dependent fractionation of oxygen gives a direct subsitution for <sup>18</s
 
 This leads to an expression for <sup>46</sup>R that is given in terms of the measured quantities <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R and the unknown <sup>17</sup>R. The quantity for <sup>17</sup>R is then determined by applying the root-finding algorithm to the difference between the measured value of <sup>46</sup>R and the expression for <sup>46</sup>R that depends on <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R and <sup>17</sup>R:
 
-<sup>46</sup>R - <sub>46</sup>R(<sup>17</sup>R, <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R) = 0
+<sup>46</sup>R - <sup>46</sup>R(<sup>17</sup>R, <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R) = 0
 
-With the resulting quantity of <sup>17</sup>R, <sup>18</sup>R, <sup>15</sup>R<sub>$\alpha$</sub>, and <sup>15</sup>R<sub>$\beta$</sub> are calculated. 
+<sup>18</sup>R, <sup>15</sup>R<sub>$\alpha$</sub>, and <sup>15</sup>R<sub>$\beta$</sub> are then calculated with the now known <sup>17</sup>R.
+
+Use the following syntax to call this equation:  
+```out = rMeasure([<sup>31</sup>R<sub>m</sub>, <sup>45</sup>R, <sup>46</sup>R], s)```  
+
+The output is given as a 1 x 4 vector:  
+```out = [<sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R, <sup>18</sup>R]
 
 ## invRM
-This function inverses the quantities from ```rMeasure``` using the same formulation:
+This function inverses of ```rMeasure``` to give the expected measured values for <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R, and <sup>46</sup>R. These means that ```rMeasure(invRM(input, s), s)``` = ```invRM(rMeasure(input, s), s)``` = ```input```. The output values are taken from the original formulation used for ```rMeasure```:
 
 <sup>17</sup>R =  0.00937035 x (<sup>18</sup>R)<sup>0.516</sup>  
 <sup>31</sup>R<sub>m</sub> = s<sup>15</sup>R<sub>$\beta$</sub> +
@@ -173,7 +179,15 @@ This function inverses the quantities from ```rMeasure``` using the same formula
  <sup>17</sup>R x (<sup>17</sup>R<sub>$\alpha$</sub> +
  <sup>17</sup>R<sub>$\beta$</sub>) +
  <sup>18</sup>R
+ 
+ Use the following syntax to call this equation:  
+```out = invRM([<sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R, <sup>18</sup>R], s)```  
 
+The output is given as a 1 x 4 vector:  
+```out = [<sup>31</sup>R<sub>m</sub>, <sup>45</sup>R, <sup>46</sup>R]```
+
+A third optional input is available for manually inputting the isotopic ratios of the double-substituted species. This allows for the input:
+```invRM(R, s, [<sup>46</sup>R<sub>$\alpha\beta$</sub>, <sup>46</sup>R<sub>$\beta,17$</sub>, <sup>46</sup>R<sub>$\alpha,17$</sub>])```
 
 # Workflow
 The workflow described here only describes the analysis process for determining the scrambling coefficient that is later used to determine isotopomer ratios for an N<sub>2</sub>O sample. Measurement techniques may vary from machine to machine. 
