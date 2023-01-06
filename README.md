@@ -165,7 +165,7 @@ Use the following syntax to call this equation:
 ```out = rMeasure([<sup>31</sup>R<sub>m</sub>, <sup>45</sup>R, <sup>46</sup>R], s)```  
 
 The output is given as a 1 x 4 vector:  
-```out = [<sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R, <sup>18</sup>R]
+```out = [<sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R, <sup>18</sup>R]```
 
 ## invRM
 This function inverses of ```rMeasure``` to give the expected measured values for <sup>31</sup>R<sub>m</sub>, <sup>45</sup>R, and <sup>46</sup>R. These means that ```rMeasure(invRM(input, s), s)``` = ```invRM(rMeasure(input, s), s)``` = ```input```. The output values are taken from the original formulation used for ```rMeasure```:
