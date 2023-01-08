@@ -43,13 +43,16 @@ These files can be permanently added by including the path in your settings. Sel
 
 ## N2O_Calibration_Gas
 
-Creating the object for the reference gas(es) should be done carefully by manually entering the known contents of the reference gas. Simply enter the line:<br />
-``` ref_name = N2O_Calibration_Gas```<br />
-```ref_name.delta31 = delta_31_value```<br />
-```ref_name.delta45 = delta_45_value```<br />
-```ref_name.delta46 = delta_46_value```
+```N2O_Calibration_Gas``` is an object that was made as a way to store reference gas information. This can later be called on by the ```IsoData``` to convert raw measurements to measured ratios. Creating the object for the reference gas(es) should be done carefully by manually entering the known contents of the reference gas. Simply enter the line:<br />
+ref_name = N2O_Calibration_Gas($\delta$<sup>31</sup>, $\delta$<sup>45</sup>, $\delta$<sup>46</sup>)
 
-It is assumed that the full isotopic description of the reference gas is known and can be derived from these three parameters, and the mass dependent fractionation of oxygen. The value for $\delta$<sup>31</sup> assumes an unscrambled ratio for <sup>31</sup>R = <sup>15</sup>R<sup>$\alpha$</sup> + <sup>17</sup>R. This object variable needs to be saved as a .mat file within the working directory of your project. The saved file will later be accessed by the related ```IsoData``` variable.
+Suppose your reference gas has the values $\delta$<sup>31</sup> = 4.01, $\delta$<sup>45</sup> = 2.7, $\delta$<sup>46</sup> = 25.2, this would be  
+```ref_name = N2O_Calibration_Gas(4.01, 2.7, 25.2)```
+
+It is assumed that the full isotopic description of the reference gas is known and can be derived from these three parameters, and the mass dependent fractionation of oxygen. The value for $\delta$<sup>31</sup> assumes an unscrambled ratio for <sup>31</sup>R = <sup>15</sup>R<sup>$\alpha$</sup> + <sup>17</sup>R. This object variable needs to be saved as a .mat file within the working directory of your project. Make sure that the file name is the same as the variable name.
+
+### N2O_Calibration_Gas Properties and Functions
+
 
 ## IsoData
 
