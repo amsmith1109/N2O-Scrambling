@@ -7,7 +7,13 @@ This repository contains tools for calibrating scrambling analysis from isotope 
   - [Citation](#Citation)
 - [N<sub>2</sub>O Scrambling Calibration](#N<sub>2</sub>O-Scrambling-Calibration)
 - [Installation](#Installation)
-  -[Contents](#Contents)
+-[Contents](#Contents)
+  -[N2O_Calibration_Gas](#N2O_Calibration_Gas)
+  -[IsoData][#IsoData]
+  -[rMeasure][#rMeasure]
+  -[invRM][#invRM]
+  -[measureScrambling][#measureScrambling]
+  -[scrambleTrend][#scrambleTrend]
 - [Workflow](#Workflow)
   - [Examples](#examples) 
   - [Importing Data](#Importing-Data-and-Creating-Objects)
@@ -25,7 +31,7 @@ Matlab R2018a or newer
 
 This package was only tested on R2018a. Some functions make work on previous versions, but there is no gaurantee. New versions are generally backwards compatible as new functions are added, but some may be depricated. 
 
-## Contents
+# Contents
 This package includes 8 files (6 functions and 2 object).  
 - [N2O_calibration_gas](#N2O_calibration_gas)    
 - [IsoData](#IsoData)  
@@ -50,8 +56,6 @@ Suppose your reference gas has the values $\delta$<sup>31</sup> = 4.01, $\delta$
 ```ref_name = N2O_Calibration_Gas(4.01, 2.7, 25.2)```
 
 It is assumed that the full isotopic description of the reference gas is known and can be derived from these three parameters, and the mass dependent fractionation of oxygen. The value for $\delta$<sup>31</sup> assumes an unscrambled ratio for <sup>31</sup>R = <sup>15</sup>R<sup>$\alpha$</sup> + <sup>17</sup>R. This object variable needs to be saved as a .mat file within the working directory of your project. Make sure that the file name is the same as the variable name.
-
-### N2O_Calibration_Gas Properties and Functions
 
 
 ## IsoData
@@ -203,7 +207,7 @@ The third input can be a single value, or a 1xn array of the <sup>31</sup>rr<sub
  <sup>17</sup>R<sub>$\beta$</sub> x <sup>17</sup>R]
 
 ## scrambleTrend
-This function calculates an s-curve best fit line on the input x and y data. It is used to determine how scrambling varies with a given input parameter (i.e., signal intensity). This function uses the aggregate of Scrambling values determined from raw calibration measurements that were analyzed with the measureScrambling function. This function uses the curve fitting toolbox to solve the following equation for ```a```, ```b```, and ```c```:
+This function calculates an s-curve best fit line on the input ```x``` and ```y``` data. It is used to determine how scrambling varies with a given input parameter (i.e., signal intensity). This function uses the aggregate of Scrambling values determined from raw calibration measurements that were analyzed with the measureScrambling function. This function uses the curve fitting toolbox to solve the following equation for ```a```, ```b```, and ```c```:
 
 y = (a*x+b) / (1+c*(a*x+b))
 
@@ -215,7 +219,7 @@ There are four outputs given in the order of:
 ```p``` is the p-value for validating if the s-curve trend persists with the given data. See below for more details.  
 ```limits``` are the minimum and maximum possible values for y within the positive region.
 
-The p-value is determined from the uncertainty of the fit results for the parameter ```a```. Since ```x``` is always multiplied by ```a```, a zero value would indicate that y does not depend on ```a``` at all and is better described by a constant. Thus the null hypothesis is defined as ```a``` being 0 or negative. The 1$\sigma$ deviation of ```a``` is determined by calculating the 68% confidence interval from ```fitresult```. Knowing that the distribution has a mean value of ```a```, the probability is then integrated from -$\infty$ to 0. This result is the p-value.
+The p-value is determined from the uncertainty of the fit results for the parameter ```a```. Since ```x``` is always multiplied by ```a```, a zero value would indicate that y does not depend on ```a``` at all and is better described by a constant. Thus the null hypothesis is defined as ```a``` being 0 or negative. The 1$\sigma$ deviation of ```a``` is determined by calculating the 68% confidence interval from ```fitresult```. Knowing that the distribution has a mean value of ```a```, the probability is then integrated from -∞ to 0. This result is the p-value.
 
 # Workflow
 The workflow described here only describes the analysis process for determining the scrambling coefficient that is later used to determine isotopomer ratios for an N<sub>2</sub>O sample. Measurement techniques may vary from machine to machine. 
