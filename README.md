@@ -9,11 +9,11 @@ This repository contains tools for calibrating scrambling analysis from isotope 
 - [Installation](#Installation)
 -[Contents](#Contents)
   -[N2O_Calibration_Gas](#N2O_Calibration_Gas)
-  -[IsoData][#IsoData]
-  -[rMeasure][#rMeasure]
-  -[invRM][#invRM]
-  -[measureScrambling][#measureScrambling]
-  -[scrambleTrend][#scrambleTrend]
+  -[IsoData](#IsoData)
+  -[rMeasure](#rMeasure)
+  -[invRM](#invRM)
+  -[measureScrambling]9#measureScrambling)
+  -[scrambleTrend](#scrambleTrend)
 - [Workflow](#Workflow)
   - [Examples](#examples) 
   - [Importing Data](#Importing-Data-and-Creating-Objects)
