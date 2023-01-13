@@ -12,7 +12,7 @@ This repository contains tools for calibrating scrambling analysis from isotope 
   -[IsoData](#IsoData)
   -[rMeasure](#rMeasure)
   -[invRM](#invRM)
-  -[measureScrambling]9#measureScrambling)
+  -[measureScrambling](#measureScrambling)
   -[scrambleTrend](#scrambleTrend)
 - [Workflow](#Workflow)
   - [Examples](#examples) 
