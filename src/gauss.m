@@ -42,5 +42,5 @@ function out = gauss(size, mu, sigma)
         sigma = 1;
     end
     X = rand(size);
-    out = erfinv(1-2*X)*sigma/2 + mu;
+    out = erfinv(1-2*X)*sigma*sqrt(2) + mu;
 end

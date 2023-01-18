@@ -46,7 +46,7 @@ function out = rMeasure(R, s)
         (1 / (1 - 2*s))*...
         ((1-s)*R45 - R31 + s*R17);
     
-    err_function = @(R17) R46... %R46 - all below
+    err_function = @(R17) R46...    %R46 - all below
         - R15a(R17) * R15b(R17)...  %15N15N16O
         - R15a(R17) * R17...        %14N15N17O
         - R15b(R17) * R17...        %15N14N17O
