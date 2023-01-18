@@ -7,7 +7,13 @@ This repository contains tools for calibrating scrambling analysis from isotope 
   - [Citation](#Citation)
 - [N<sub>2</sub>O Scrambling Calibration](#N<sub>2</sub>O-Scrambling-Calibration)
 - [Installation](#Installation)
-  -[Contents](#Contents)
+- [Contents](#Contents)  
+  - [N2O_Calibration_Gas](#N2O_Calibration_Gas)  
+  - [IsoData](#IsoData)  
+  - [rMeasure](#rMeasure)  
+  - [invRM](#invRM)  
+  - [measureScrambling](#measureScrambling)  
+  - [scrambleTrend](#scrambleTrend)  
 - [Workflow](#Workflow)
   - [Examples](#examples) 
   - [Importing Data](#Importing-Data-and-Creating-Objects)
@@ -25,7 +31,7 @@ Matlab R2018a or newer
 
 This package was only tested on R2018a. Some functions make work on previous versions, but there is no gaurantee. New versions are generally backwards compatible as new functions are added, but some may be depricated. 
 
-## Contents
+# Contents
 This package includes 8 files (6 functions and 2 object).  
 - [N2O_calibration_gas](#N2O_calibration_gas)    
 - [IsoData](#IsoData)  
@@ -50,8 +56,6 @@ Suppose your reference gas has the values $\delta$<sup>31</sup> = 4.01, $\delta$
 ```ref_name = N2O_Calibration_Gas(4.01, 2.7, 25.2)```
 
 It is assumed that the full isotopic description of the reference gas is known and can be derived from these three parameters, and the mass dependent fractionation of oxygen. The value for $\delta$<sup>31</sup> assumes an unscrambled ratio for <sup>31</sup>R = <sup>15</sup>R<sup>$\alpha$</sup> + <sup>17</sup>R. This object variable needs to be saved as a .mat file within the working directory of your project. Make sure that the file name is the same as the variable name.
-
-### N2O_Calibration_Gas Properties and Functions
 
 
 ## IsoData
@@ -122,19 +126,6 @@ Structure form:<br />
 ```measurement.R(2)``` = <sup>46</sup>R<br />
 ```measurement.delta(1)``` = <sup>45</sup>$\delta$
 
-## measureScrambling
-(placeholder)  
-Function that computes the scrambling coefficient from a given set of measurements. This uses the root-finding method to determine the scrambling coefficient that explains the measured values for known isotopic ratios of the sample and reference gas. Additional inputs are available for double substituted species. This was added as it was found the the definitions of individual isotopic ratios do not always agree when considering double substitutions.
-
-The doubles substitution correction can be used in different ways. If no correction is provided for the double substituted species are assumed to be zero. Using a simple "true" input will cause the double substituted species to be calculated from the individual isotopic  ratios (i.e., N15_alpha, N15_beta, O17 and O18).
-
-This function can return a vector output if a matrix of measurement values are given. However, it is restricted to a single gas as it expects a single line that describes that known ratios of the sample and reference gas.
-
-
-## scrambleTrend
-(placeholder)  
-This function calculates an s-curve best fit line on the input x and y data. It is used to determine how scrambling varies with a given input parameter (i.e., signal intensity). This function uses the aggregate of Scrambling values determined from raw calibration measurements that were analyzed with the measureScrambling function.
-
 ## rMeasure
 Calculates <sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R and <sup>18</sup>R using the formulation of  <sup>31</sup>R<sub>measured</sub>, <sup>45</sup>R, <sup>46</sup>R and mass-dependent fractionation of oxygen as defined in Kaiser et al 2003. Due to the non-linearity of the mass-dependent fractionation, <sup>17</sup>R is first calculated using the root-finding function ```fzero```. All other ratios are then calculated by algebraic substitutions. The four defining equations are as follows:
 
@@ -178,9 +169,9 @@ This function inverses of ```rMeasure``` to give the expected measured values fo
  (1 - s)<sup>15</sup>R<sub>$\alpha$</sub> +
  <sup>17</sup>R  
 <sup>45</sup>R = <sup>15</sup>R<sub>$\alpha$</sub> + <sup>15</sup>R<sub>$\beta$</sub> + <sup>17</sup>R  
-<sup>46</sup>R = <sup>15</sup>R<sub>$\alpha$</sub> x <sup>17</sup>R<sub>$\beta$</sub> +
- <sup>17</sup>R x (<sup>17</sup>R<sub>$\alpha$</sub> +
- <sup>17</sup>R<sub>$\beta$</sub>) +
+<sup>46</sup>R = <sup>15</sup>R<sub>$\alpha$</sub> x <sup>15</sup>R<sub>$\beta$</sub> +
+ <sup>17</sup>R x (<sup>15</sup>R<sub>$\alpha$</sub> +
+ <sup>15</sup>R<sub>$\beta$</sub>) +
  <sup>18</sup>R
  
  Use the following syntax to call this equation:  
@@ -191,6 +182,44 @@ out = [<sup>31</sup>R<sub>m</sub>, <sup>45</sup>R, <sup>46</sup>R]
 
 A third optional input is available for manually inputting the isotopic ratios of the double-substituted species. This allows for the input:
 invRM(R, s, [<sup>46</sup>R<sub>$\alpha\beta$</sub>, <sup>46</sup>R<sub>$\beta,17$</sub>, <sup>46</sup>R<sub>$\alpha,17$</sub>])
+
+## measureScrambling
+```measureScrambling``` uses a root finding algorithm to find the scrambling coefficient that explains discrepancies in the <sup>31</sup>r measurement. This requires complete knowledge of the sample (often spiked reference gas) and the reference gas. However, even achieving the <sup>31</sup>R<sub>measured</sub> for any sample from raw measurement requires knowledge of of the scrambling coefficient, which should not be assumed prior to making a measurement. From the raw measurements, we need to obtain the signal ratio <sup>31</sup>r for the sample and the reference gas. Dividing these two quantities yields the <sup>31</sup>rr value. More explicitly, this is given by:
+
+<sup>31</sup>rr<sub>measure</sub> = <sup>31</sup>r<sub>sa</sub> / <sup>31</sup>r<sub>ref</sub>
+
+This eliminates the differences in detector sensitivity of the m/z 31 and m/z 30 measurements. This is equivalent to the ratio of the actual isotopic ratios of the two gases when considering the influence of scrambling:
+
+<sup>31</sup>rr<sub>theory</sub> = <sup>31</sup>R<sub>sa,m</sub> / <sup>31</sup>R<sub>ref,m</sub>
+
+The formulation for measured <sup>31</sup>R is given above in the description of ```rMeasure```. Since knowledge of the individual isotopic ratios is required prior to this calculation, <sup>31</sup>rr<sub>theory</sub> is only a function of the scrambling cofficient ```s```. Thus we can find the ```s``` that explains the data by finding the value that will give a zero difference between <sup>31</sup>rr<sub>theory</sub> and <sup>31</sup>rr<sub>measure</sub>. This function accomplishes this by defining the error function <sup>31</sup>rr<sub>measure</sub> - <sup>31</sup>rr<sub>theory</sub> as an anonymous function and using the ```fzero``` function in the domain of [0, 1]:
+
+```fzero(errorFunction, [0, 1])```
+
+This function has 3 required inputs, and 1 optional input. The first two is the individual ratios of the sample and reference gas in an 1x4 array. They must be in the order:
+
+[<sup>15</sup>R<sub>$\alpha$</sub>, <sup>15</sup>R<sub>$\beta$</sub>, <sup>17</sup>R,  <sup>18</sup>R]
+
+The third input can be a single value, or a 1xn array of the <sup>31</sup>rr<sub>measure</sub> values. The input size determines the output size as the function loops over each input assuming the same defined sample and reference input. The 4th optional input is then if the user wishes to specify isotopomers of the double-substituted molecules. If this is not included, a stochastic distribution is assumed and they will be calculated from the singles. This input is a 1x3 array given in the following order:
+
+[<sup>15</sup>R<sub>$\alpha$</sub> x <sup>15</sup>R<sub>$\beta$</sub>,
+ <sup>17</sup>R<sub>$\alpha$</sub> x <sup>17</sup>R,
+ <sup>17</sup>R<sub>$\beta$</sub> x <sup>17</sup>R]
+
+## scrambleTrend
+This function calculates an s-curve best fit line on the input ```x``` and ```y``` data. It is used to determine how scrambling varies with a given input parameter (i.e., signal intensity). This function uses the aggregate of Scrambling values determined from raw calibration measurements that were analyzed with the measureScrambling function. This function uses the curve fitting toolbox to solve the following equation for ```a```, ```b```, and ```c```:
+
+y = (a*x+b) / (1+c*(a*x+b))
+
+There are four outputs given in the order of:  
+[```fitresult```, ```gof```, ```p```, ```limits```]
+
+```fitresult``` is a matlab ```cfit``` object that resulted from the curve fit. This contains the results for ```a```, ```b```, and ```c``` and can be used to obtain uncertainties of the results.  
+```gof``` means "goodness of fit" and is also generated by the curve fit. It is a ```struct``` that contains common statistical results.  
+```p``` is the p-value for validating if the s-curve trend persists with the given data. See below for more details.  
+```limits``` are the minimum and maximum possible values for y within the positive region.
+
+The p-value is determined from the uncertainty of the fit results for the parameter ```a```. Since ```x``` is always multiplied by ```a```, a zero value would indicate that y does not depend on ```a``` at all and is better described by a constant. Thus the null hypothesis is defined as ```a``` being 0 or negative. The 1$\sigma$ deviation of ```a``` is determined by calculating the 68% confidence interval from ```fitresult```. Knowing that the distribution has a mean value of ```a```, the probability is then integrated from -∞ to 0. This result is the p-value.
 
 # Workflow
 The workflow described here only describes the analysis process for determining the scrambling coefficient that is later used to determine isotopomer ratios for an N<sub>2</sub>O sample. Measurement techniques may vary from machine to machine. 
