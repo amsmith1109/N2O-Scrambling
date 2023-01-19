@@ -5,8 +5,11 @@
 %   R31_measured, R45, and R46 from Kaiser et al 2003 along with the 
 %   mass-dependent fractionation of oxygen. Fractionation constants are
 %   defined at the beginning of the function. Due to the non-linearity of
-%   the mass-dependent fractionation, 18R has to be calculated using a
+%   the mass-dependent fractionation, 17R has to be calculated using a
 %   root-finding approach. All other ratios are then simple substitutions.
+%
+%   This program is functionally identical to rMeasure, but calculates 17R
+%   first instead of 18R.
 %
 % Example: 
 %    rMeasure(0.0041, 0.0078, 0.0021, 0.08)
@@ -36,26 +39,26 @@ function out = rMeasure(R, s)
     if ~exist('s')
         s = 0;
     end
-    R17 = @(R18) a * R18^0.516;
+    R18 = @(R17) ((1/a)*R17)^(1/b);
     
-    R15a = @(R18) ...
+    R15a = @(R17) ...
         (1 / (1 - 2*s))*...
-        (R31 - s*R45 - (1-s)*R17(R18));
+        (R31 - s*R45 - (1-s)*R17);
     
-    R15b = @(R18)...
+    R15b = @(R17)...
         (1 / (1 - 2*s))*...
-        ((1-s)*R45 - R31 + s*R17(R18));
+        ((1-s)*R45 - R31 + s*R17);
     
-    err_function = @(R18) R46...    %R46 - all below
-        - R15a(R18) * R15b(R18)...  %15N15N16O
-        - R15a(R18) * R17(R18)...   %14N15N17O
-        - R15b(R18) * R17(R18)...   %15N14N17O
-        - R18;                      %14N14N18O
+    err_function = @(R17) R46...    %R46 - all below
+        - R15a(R17) * R15b(R17)...  %15N15N16O
+        - R15a(R17) * R17...        %14N15N17O
+        - R15b(R17) * R17...        %15N14N17O
+        - R18(R17);                 %14N14N18O
     
-    R18 = fzero(err_function, [0,1]);
+    R17 = fzero(err_function, [0,1]);
     
-    out = [R15a(R18),...
-        R15b(R18),...
-        R17(R18),...
-        R18];
+    out = [R15a(R17),...
+        R15b(R17),...
+        R17,...
+        R18(R17)];
 end

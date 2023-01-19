@@ -1,4 +1,6 @@
 clear all; close all; clc;
+load praxair
+
 
 y = 1;
 sig = .25;
@@ -15,9 +17,7 @@ for i = 1:numel(input)
 end
 [cnt, bins] = histcounts(output);
 bins = conv(bins,[.5,.5],'valid');
-
 [xData, yData] = prepareCurveData( bins, cnt );
-
 % Set up fittype and options.
 ft = fittype( 'gauss1' );
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
