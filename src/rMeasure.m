@@ -9,7 +9,7 @@
 %   root-finding approach. All other ratios are then simple substitutions.
 %
 % Example: 
-%    rMeasure(0.0041, 0.0078, 0.0021, 0.08)
+%    rMeasure([0.0041, 0.0078, 0.0021], 0.08)
 %       = [0.0037    0.0037    0.0004    0.0021]
 %
 % Requirements:
