@@ -1,3 +1,13 @@
+%% error_propagation_test
+%
+% This script was used to bootstrap and verify results that are shown in
+% the supplemental. This script gives the plot of the prefactor vs s, and
+% generates the table showing that errors in 18R are approximately equal to
+% the errors in 46R measurements.
+%
+% Author: Alex Smith
+% email address: amsmith1109@gmail.com
+% Created: July 2022; Last revision: 05-Jan-2023
 clear all; close all; clc;
 load praxair
 

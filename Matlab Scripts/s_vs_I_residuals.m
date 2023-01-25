@@ -3,6 +3,8 @@
 % This script was used to check if errors in the scrambling versus signal 
 % intensity plot were indeed gaussian.
 % Author: Alex Smith
+% email address: amsmith1109@gmail.com
+% Created: July 2022; Last revision: 25-Jan-2023
 close all; clear all; clc;
 
 load Intensity_Residuals
