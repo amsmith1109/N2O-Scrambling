@@ -19,8 +19,7 @@ for i = 1:numel(d1.Sample_name)
     s(i) = measureScrambling(sa(1:3),...
                             praxair.R_individual(1:3),...
                             rr31,...
-                            doubles);
-    
+                            sa(4:end));
 end                
 plot(I,s,'o')
 
@@ -33,8 +32,7 @@ for i = 1:numel(d2.Sample_name)
     s(i) = measureScrambling(sa(1:3),...
                             praxair.R_individual(1:3),...
                             rr31,...
-                            doubles);
-    
+                            sa(4:end));
 end
 hold on
 plot(I,s,'.')

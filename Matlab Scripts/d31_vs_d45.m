@@ -1,3 +1,7 @@
+% d31_vs_d45
+%
+% This script generates the plot shown in the main text as figure 1. 
+
 %% Set up workspace
 clear all; 
 % clc; 
@@ -42,10 +46,14 @@ for i = 1:n
 end
 data.min = sort(data.min);
 data.max = sort(data.max);
-data.min_delta(:,1) = (data.min(:,1)./praxair.rref(2)-1)*1000;
-data.min_delta(:,2) = (data.min(:,2)./praxair.rref(1)-1)*1000;
-data.max_delta(:,1) = (data.max(:,1)./praxair.rref(2)-1)*1000;
-data.max_delta(:,2) = (data.max(:,2)./praxair.rref(1)-1)*1000;
+% data.min_delta(:,1) = (data.min(:,1)./praxair.rref(2)-1)*1000;
+% data.min_delta(:,2) = (data.min(:,2)./praxair.rref(1)-1)*1000;
+% data.max_delta(:,1) = (data.max(:,1)./praxair.rref(2)-1)*1000;
+% data.max_delta(:,2) = (data.max(:,2)./praxair.rref(1)-1)*1000;
+data.min_delta(:,1) = (data.min(:,1)./praxair.R45-1)*1000;
+data.min_delta(:,2) = (data.min(:,2)./praxair.R31-1)*1000;
+data.max_delta(:,1) = (data.max(:,1)./praxair.R45-1)*1000;
+data.max_delta(:,2) = (data.max(:,2)./praxair.R31-1)*1000;
 plot(data.max_delta(:,1), data.max_delta(:,2), 'ro')
 hold on
 plot(data.min_delta(:,1), data.min_delta(:,2), 'b^')
@@ -87,8 +95,10 @@ s = @(ref, slope) (slope * ref.rref(1) * (ref.R15b + 1)) / ...
 % range = [s(praxair, ft2(1)), s(praxair, ft(1))]
 % [ft(2), ft2(2)]
 
-R31 = praxair.rref(1);
-R45 = praxair.rref(2);
+% R31 = praxair.rref(1);
+% R45 = praxair.rref(2);
+R31 = praxair.R31;
+R45 = praxair.R45;
 R15a = praxair.R15a;
 R15b = praxair.R15b;
 R17 = praxair.R17;

@@ -16,7 +16,7 @@ R46 = praxair.R46;
 y = [R31, R45, R46];
 
 %% Evaluate influence of error due to scrambling coefficient
-if 1
+if 0
     ds = s*.05; % Corresponds to 5% error in s
     
     % Create random error measurements
@@ -47,22 +47,30 @@ end
 % Suppose relative error of 1% for R46, 50% for R31 and R45. If uncertainty 
 % is primarily determined by the R46 measurement, the ending uncertainty
 % should be close to 1% for R18.
-if true
-sig = [y(1)*0.5, y(2)*0.5, y(3)*.01]; 
-Y = zeros([sz,3]);
-output = zeros([sz,4]);
-for i = 1:3
-     Y(:,i) = gauss([sz,1], y(i), sig(i));
-end
-for i = 1:sz
-    output(i,:) = rMeasure(Y(i,:), s);
-end
-R18 = output(:,4);
-[ft18, err18] = gaussFit(R18);
-disp(['Histogram fit results yield ', num2str(err18), '% error ',...
-    'resulting from 1% error in R46.'])
-figure
-histogram(R18)
-hold on
-plot(ft18)
+if 1
+    r = [0.01, 0.1, 0.5, 1];
+    for row = 1:2
+        for col = 1:4
+            sig = [y(1)*r(col), y(2)*r(col), y(3)*r(row)]; 
+            Y = zeros([sz,3]);
+            output = zeros([sz,4]);
+            for i = 1:3
+                 Y(:,i) = gauss([sz,1], y(i), sig(i));
+            end
+            for i = 1:sz
+                output(i,:) = rMeasure(Y(i,:), s);
+            end
+            R18 = output(:,4);
+            [ft18, err18] = gaussFit(R18);
+            disp(['Histogram fit results yield ', num2str(err18), '% error ',...
+                'resulting from ', num2str(r(row)*100), '% error in R46.'])
+            tbl(row, col) = err18;
+            %% uncomment if you wish to see the resulting histogram and gaussian fit.
+            % figure
+            % histogram(R18)
+            % hold on
+            % plot(ft18)
+        end
+    end
+    disp(tbl)     %Displays summarized results
 end    

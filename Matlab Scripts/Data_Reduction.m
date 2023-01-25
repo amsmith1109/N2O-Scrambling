@@ -54,8 +54,6 @@ N2O_data_table = N2O_data_table(idx,:);
 names = {names{idx}};
 folder = pwd;
 
-% save('E:\My Documents\School\github\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data_table.mat','N2O_data_table')
-% save('E:\My Documents\School\github\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data.mat','N2O_data')
 save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data_table.mat','N2O_data_table')
 save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\N2O_data.mat','N2O_data')
 end
@@ -103,12 +101,4 @@ for i = 1:numel(experiments)
 end
 
 %save('C:\Users\Alex\Documents\GitHub\N2O-Scrambling\Matlab Scripts\Data\Reduced Data\NO_energy.mat','NO_energy_data')
-end
-
-
-function out = dbl(R46, ref)
-    k = ref.R17/ref.R15a;
-    R15a_add = @(b) b/(1+k);
-    R17_add = @(b) k*R15a_add(b);
-    
 end

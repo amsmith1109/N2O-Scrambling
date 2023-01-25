@@ -1,4 +1,5 @@
 % check_for_fractionation
+%
 % This script looked at the NO measurements for each sample and compared
 % the first time 31R was measured versus the 2nd time it was measured in a
 % sample run. If fractionation did occur, it would always be lower/higher
@@ -6,6 +7,8 @@
 % positive and negative differences.
 %
 % Author: Alex Smith
+% email address: amsmith1109@gmail.com
+% Created: July 2022; Last revision: 24-Jan-2023
 close all; clear all; clc;
 load NO
 

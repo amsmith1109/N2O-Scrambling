@@ -1,38 +1,28 @@
+%% Plot_Sample_Deltas
+% 
+% This script was written to generate the figure 2 in the main text of the
+% published results. This generates a 2 x 2 subplot figure that shows delta
+% 31 and delta 45 for a single calibation gas sample. It shows that varying
+% intensity influences the resulting delta-31 in a systematic way.
+%
+% This script is not intended to be used for anything other than its
+% original purpose.
+%
+% Author: Alex Smith
+% Last Modified: 1/24/2023
+%
 %% configure workspace
 clear all; close all; clc;
-folder = 'G:\Shared drives\Rice Lab Data\N2O\Scrambling\Pictures\RCM\delta vs I\';
 load NO
 load N2O
 load praxair
 leftColor = [0, .447, .741];
 rightColor = [.85, .325, .098];
-%% N2O Graphs Alone
-% x_label=('Intensity (mV)');
-% y_label=('\delta^{45} N_2O (?)');
-% fname = [folder,'d45'];
-% names = fields(N2O);
-% for i = 1:numel(names)
-%     set = N2O.(names{i});
-%     [intensity, delta, uncertainty] = calcR(set);
-%     f = plotter(intensity, delta, uncertainty, x_label,y_label,fname);
-% end
-
-%% NO Graphs Alone
-% x_label=('Intensity (mV)');
-% y_label=('\delta^{31} NO (?)');
-% fname = [folder,'d31'];
-% names = fields(NO);
-% for i = 1:numel(names)
-%     set = NO.(names{i});
-%     [intensity, delta, uncertainty] = calcR(set);
-%     f = plotter(intensity, delta, uncertainty, x_label,y_label,fname);
-% end
 
 %% Double Axis N2O & NO
 x_label=('Intensity (mV)');
 y_label1=('\delta^{31} NO (?)');
 y_label2=('\delta^{45} N_2O (?)');
-fname = [folder,'d45 and d31'];
 names = fields(NO);
 for i = 1:numel(names)
     set = NO.(names{i});
@@ -77,7 +67,6 @@ for i = 1:numel(names)
     mid_point = round(mean(ax.YLim),0);
     ax.YTick = [mid_point-dx,mid_point,mid_point+dx];
     ax.YLim = [ax.YTick(1), ax.YTick(end)];
-    file = [fname,' - ',names{i}];
 end
 % variable han is used to place a single y axis label for the delta 31/45 plots
 legend('\delta^{31}', '\delta^{45}')
@@ -145,11 +134,4 @@ function f = plotter(I, d, dW, xlab, ylab, marker)
     print_settings;
     xlim([0, 5000])
     xticks([100, 2500, 5000])
-end
-
-function savefig(f,fname)
-    file = [fname,'.fig'];
-    saveas(f,file);
-    file = [fname,'.png'];
-    saveas(f,file);
 end
