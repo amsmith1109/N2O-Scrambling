@@ -1,5 +1,4 @@
-clear all;  clc;
-close all;
+clear all;  clc; close all;
 load praxair
 load NO_data
 load N2O_data
@@ -34,8 +33,7 @@ for i = 1:numel(names)
 end
 [fitresult, gof, pval, limits] = scrambleTrend(xx, yy);
 plot(fitresult)
-txt = ['$s = \frac{a\cdot U_{30} + b}',...
-    '{1 + c(a\cdot U_{30} + b)}\\',...
+txt = ['$s = s_0 + \frac{U_{30}}{a + bU_{30}}',...
     ', r^2 = ',num2str(gof.rsquare),'$'];
 ylim([.99*min(yy), 1.01*max(yy)])
 xlim([.8*min(xx), 1.01*max(xx)])
@@ -55,6 +53,5 @@ lgd = legend([ax.Children(3)], txt);
 lgd.Interpreter = 'latex';
 lgd.FontSize = 12;
 fitresult
-feval(fitresult, 0)
 feval(fitresult, 500)
-1/fitresult.c
+limits

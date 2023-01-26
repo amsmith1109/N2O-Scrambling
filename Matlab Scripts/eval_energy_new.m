@@ -14,10 +14,11 @@ load praxair
 
 names = fields(NO_energy_data);
 range = 1:numel(names);
+plot_results = 0;
 %% Grab data to analyze
 for i = range
     set = NO_energy_data.(names{i});
-    for j = 1:size(set,1)
+    for j = 1:size(set, 1)
         id = set.Sample_name{j};
         rr31 = set.rr31(j);
         sa = N2O_data.(id)(1:3);
@@ -95,18 +96,12 @@ else
     tbl{2,i} = fit{i}.b;
 end
 tbl{3,i} = fit{i}.c;
-tbl{4,i} = p(i);
-tbl{5,i} = feval(fit{i},500);
-if lim{i}(1) < 0.07
-    tbl{6,i} = feval(fit{i},50);
-else
-    tbl{6,i} = lim{i}(1);
+tbl{4,i} = feval(fit{i}, 500);
+tbl{5,i} = lim{i}(1,2);
+tbl{6,i} = p(i);
 end
-tbl{7,i} = lim{i}(1,2);
-end
-row_names = {'a coefficient', 'b coefficient', 'c coefficient',... 
-             'Trend p-value', 's at 500 mV', 'Lower limit of s',...
-             'Upper limit of s'};
+row_names = {'a coefficient', 'b coefficient', 's_0 coefficient',... 
+             's at 500 mV', 'Upper limit of s', 'Trend p-value'};
 tbl = cell2table(tbl);
 tbl.Properties.VariableNames = names.';
 tbl.Properties.RowNames = row_names

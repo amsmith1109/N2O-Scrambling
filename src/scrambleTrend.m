@@ -33,7 +33,8 @@ function [fitresult, gof, p, limits] = scrambleTrend(x, y)
 
 [xData, yData] = prepareCurveData(x, y);
 
-ft = fittype( '(a*x+b)/(1+c*(a*x+b))', 'independent', 'x', 'dependent', 'y' );
+%ft = fittype( '(a*x+b)/(1+c*(a*x+b))', 'independent', 'x', 'dependent', 'y' );
+ft = fittype( '(x/(a+b*x) + c)', 'independent', 'x', 'dependent', 'y' ); % recommended fit
 opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
 opts.Display = 'Off';
 opts.DiffMaxChange = 1;
@@ -55,14 +56,22 @@ conf = confint(fitresult);
 a = fitresult.a;
 b = fitresult.b;
 c = fitresult.c;
-lower_limit = b/(1+b*c);
-upper_limit = 1/c;
+% lower_limit = b/(1+b*c);
+% upper_limit = 1/c;
+lower_limit = feval(fitresult, 0);
+upper_limit = c + 1/b;
 observation_limit = predint(fitresult, [0,1e9], .95, 'observation','on');
 limits = [lower_limit, upper_limit; observation_limit(1), observation_limit(2,2)];
 
 %% Calculate p-value for trend robustness
-conf = confint(fitresult, 0.68);
+linfit = lintest(xData, yData);
+conf = confint(linfit, 0.68);
 sigma = (conf(2,1) - conf(1,1))/2;
-%sig_zero = a/sigma;
-p = 1/2*(1 + erf(-a/(sigma*sqrt(2))));
+p = 1/2*(1 + erf(-linfit.p1/(sigma*sqrt(2))));
+end
+
+function [fitresult, gof] = lintest(x,y)
+    [xData, yData] = prepareCurveData( x, y );
+    ft = fittype( 'poly1' );
+    [fitresult, gof] = fit( xData, yData, ft );
 end
