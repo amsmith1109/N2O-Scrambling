@@ -1,6 +1,6 @@
-% rMeasure - Computes 15R_alpha, 15R_beta, 17R, 18R from IRMS results
+%% Description:
+%   rMeasure - Computes 15R_alpha, 15R_beta, 17R, 18R from IRMS results
 %
-% Description:
 %   Calculates individual N and O ratios using the formulation of 
 %   R31_measured, R45, and R46 from Kaiser et al 2003 along with the 
 %   mass-dependent fractionation of oxygen. Fractionation constants a & b
@@ -9,22 +9,23 @@
 %   root-finding approach. All other ratios are then simple substitutions.
 %   See Kaiser et al (2003)  https://doi.org/10.1029/2003JD003613
 %
-% Example: 
+%% Example: 
 %    rMeasure([0.0041, 0.0078, 0.0021], 0.08)
 %       = [0.0037    0.0037    0.0004    0.0021]
 %
 % Requirements:
 %   None
 %
-% Inputs:
+%& Inputs:
 %   R31 = Measured m/z 31 ratio
 %   R45 = Measured m/z 45 ratio
 %   R46 = Measured m/z 46 ratio
 %   s = scrambling coefficient
 %
-% Outputs:
+%% Outputs:
 %   out = [R15_alpha,   R15_beta,   R17,    R18]
 %
+%% Authorship:
 % Author: Alex Smith
 % email address: amsmith1109@gmail.com
 % Created: July 2022; Last revision: 05-Dec-2022
