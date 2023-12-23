@@ -3,10 +3,11 @@
 % Description:
 %   Calculates individual N and O ratios using the formulation of 
 %   R31_measured, R45, and R46 from Kaiser et al 2003 along with the 
-%   mass-dependent fractionation of oxygen. Fractionation constants are
-%   defined at the beginning of the function. Due to the non-linearity of
-%   the mass-dependent fractionation, 18R has to be calculated using a
+%   mass-dependent fractionation of oxygen. Fractionation constants a & b
+%   are defined at the beginning of the function. Due to the non-linearity
+%   of the mass-dependent fractionation, 18R has to be calculated using a
 %   root-finding approach. All other ratios are then simple substitutions.
+%   See Kaiser et al (2003)  https://doi.org/10.1029/2003JD003613
 %
 % Example: 
 %    rMeasure([0.0041, 0.0078, 0.0021], 0.08)
@@ -28,15 +29,17 @@
 % email address: amsmith1109@gmail.com
 % Created: July 2022; Last revision: 05-Dec-2022
 function out = rMeasure(R, s)
+    % Oxygen Fractionation Constants
+    a = 0.00937035;
+    b = 0.516;
+    % Explicit definitions from the vector
     R31 = R(1);
     R45 = R(2);
     R46 = R(3);
-    a = 0.00937035;
-    b = 0.516;
     if ~exist('s')
         s = 0;
     end
-    R17 = @(R18) a * R18^0.516;
+    R17 = @(R18) a * R18^b;
     
     R15a = @(R18) ...
         (1 / (1 - 2*s))*...
