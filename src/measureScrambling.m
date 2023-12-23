@@ -1,6 +1,6 @@
-% measureScrambling - determine scrambling coefficient from measurements
-%
 %% Description:
+%   measureScrambling - determine scrambling coefficient from measurements
+%
 %   Function that computes the scrambling coefficient from a given set of
 %   measurements. This uses the root-finding method to determine the
 %   scrambling coefficient that explains the measured values for known
@@ -46,10 +46,10 @@
 %                      1.0089,	1)
 %       = 0.913
 %
-% Requirements:
+%% Requirements:
 %   None
 %
-% Inputs:
+%% Inputs:
 %   sa = [N15_alpha, N15_beta, O17, O18] of sample gas
 %   ref = [N15_alpha, N15_beta, O17, O18] of reference gas
 %   rr31 = IRMS measured ratio ([U31/U30]_sa / [U31/U30]_ref)
@@ -59,15 +59,15 @@
 %       doubles is for the double substituted isotopomers that give a 46R
 %       signal. 
 %
-% Outputs:
+%% Outputs:
 %   out = scrambling coefficients that explains measurement for the
 %       measured signal intensity ratio(s).
 %
-%% Authorship
+%% Authorship:
 % Author: Alex Smith
 % email address: amsmith1109@gmail.com
 % Created: July 2022; Last revision: 05-Jan-2022
-%% Function
+%% Function:
 function out = measureScrambling(sa, ref, rr31, doubles)
     if ~exist('doubles')
         doubles = [0, 0, 0];
